@@ -327,25 +327,91 @@ function App() {
         setCart([]);
     };
 
-    const checkout = () => {
-        if (
-            cart.length === 0
-        ) {
-            showMessage(
-                "Корзина пуста"
-            );
+const checkout = async () => {
+    if (cart.length === 0) {
+        showMessage("Корзина пуста");
+        return;
+    }
 
-            return;
+    const orderNumber = `LF-${Date.now()}`;
+
+    const order = {
+        orderNumber,
+        createdAt: new Date().toISOString(),
+
+        customer: {
+            telegramId: user?.id ?? null,
+            firstName:
+                user?.first_name ??
+                "Пользователь",
+            lastName:
+                user?.last_name ?? "",
+            username:
+                user?.username ?? "",
+        },
+
+        items: cart.map((item) => ({
+            productId: item.productId,
+            name: item.name,
+            category: item.category,
+            image: item.image,
+            unitPrice: Number(
+                item.unitPrice
+            ),
+            quantity: Number(
+                item.quantity
+            ),
+            nickname:
+                item.nickname ?? "",
+            options:
+                item.options ?? [],
+        })),
+
+        total: cartTotal,
+    };
+
+    try {
+        haptic("medium");
+
+        const response = await fetch(
+            "/api/create-order",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json",
+                },
+                body: JSON.stringify(order),
+            }
+        );
+
+        const result =
+            await response.json();
+
+        if (!response.ok || !result.ok) {
+            throw new Error(
+                result.error ||
+                    "Не удалось отправить заказ"
+            );
         }
 
         haptic("success");
 
         showMessage(
-            `Заказ на сумму ${cartTotal.toLocaleString(
-                "ru-RU"
-            )} ₽ готов к оформлению`
+            `Заказ ${orderNumber} отправлен! Мы свяжемся с вами в Telegram.`
         );
-    };
+
+        setCart([]);
+    } catch (error) {
+        console.error(error);
+
+        haptic("warning");
+
+        showMessage(
+            "Не удалось отправить заказ. Попробуйте ещё раз."
+        );
+    }
+};
 
     const saveProduct = (
         preparedProduct

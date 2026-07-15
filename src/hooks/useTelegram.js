@@ -34,22 +34,34 @@ export function useTelegram() {
         window.alert(message);
     };
 
-    const haptic = (type = "selection") => {
-        if (type === "success") {
-            telegram?.HapticFeedback
-                ?.notificationOccurred?.("success");
-            return;
-        }
-
-        if (type === "warning") {
-            telegram?.HapticFeedback
-                ?.notificationOccurred?.("warning");
-            return;
-        }
-
+const haptic = (type = "selection") => {
+    if (type === "success") {
         telegram?.HapticFeedback
-            ?.selectionChanged?.();
-    };
+            ?.notificationOccurred?.(
+                "success"
+            );
+        return;
+    }
+
+    if (type === "warning") {
+        telegram?.HapticFeedback
+            ?.notificationOccurred?.(
+                "warning"
+            );
+        return;
+    }
+
+    if (type === "medium") {
+        telegram?.HapticFeedback
+            ?.impactOccurred?.(
+                "medium"
+            );
+        return;
+    }
+
+    telegram?.HapticFeedback
+        ?.selectionChanged?.();
+};
 
     return {
         telegram,
