@@ -1,0 +1,12 @@
+html {
+    background: #0d0d0d;
+}
+
+body {
+    margin: 0;
+}
+
+button,
+a {
+    -webkit-tap-highlight-color: transparent;
+}
