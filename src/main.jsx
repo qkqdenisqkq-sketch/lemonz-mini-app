@@ -1,14 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import App from "./App.jsx";
+import App from "./App";
+import "./styles/global.css";
 
-const telegram = window.Telegram?.WebApp;
-
-telegram?.ready();
-telegram?.expand();
-
-createRoot(document.getElementById("root")).render(
+createRoot(
+    document.getElementById("root")
+).render(
     <StrictMode>
         <App />
     </StrictMode>
