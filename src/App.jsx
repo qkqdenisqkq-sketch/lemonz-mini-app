@@ -403,12 +403,18 @@ const checkout = async () => {
 
         setCart([]);
     } catch (error) {
-        console.error(error);
+        console.error(
+            "Ошибка отправки заказа:",
+            error
+        );
 
         haptic("warning");
 
         showMessage(
-            "Не удалось отправить заказ. Попробуйте ещё раз."
+            `Не удалось отправить заказ: ${
+                error?.message ??
+                "неизвестная ошибка"
+            }`
         );
     }
 };
