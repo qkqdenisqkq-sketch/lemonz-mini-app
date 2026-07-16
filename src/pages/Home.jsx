@@ -103,6 +103,11 @@ export default function Home({
     const [searchQuery, setSearchQuery] =
         useState("");
 
+    const [
+        categoriesPinned,
+        setCategoriesPinned,
+    ] = useState(false);
+
     const [filterId, setFilterId] =
         useState("priceAsc");
 
@@ -111,6 +116,9 @@ export default function Home({
 
     const sectionRefs = useRef({});
     const categoryNavigationRef =
+        useRef(null);
+
+    const categoryPlaceholderRef =
         useRef(null);
     const categoryButtonRefs =
         useRef({});
@@ -237,6 +245,61 @@ export default function Home({
             navigation.removeEventListener(
                 "wheel",
                 handleWheel
+            );
+        };
+    }, []);
+
+    useEffect(() => {
+        const updatePinnedState = () => {
+            const placeholder =
+                categoryPlaceholderRef.current;
+
+            if (!placeholder) {
+                return;
+            }
+
+            const headerHeight =
+                document
+                    .querySelector(
+                        ".header"
+                    )
+                    ?.getBoundingClientRect()
+                    .height ?? 68;
+
+            const placeholderTop =
+                placeholder.getBoundingClientRect()
+                    .top;
+
+            setCategoriesPinned(
+                placeholderTop <=
+                    headerHeight
+            );
+        };
+
+        window.addEventListener(
+            "scroll",
+            updatePinnedState,
+            {
+                passive: true,
+            }
+        );
+
+        window.addEventListener(
+            "resize",
+            updatePinnedState
+        );
+
+        updatePinnedState();
+
+        return () => {
+            window.removeEventListener(
+                "scroll",
+                updatePinnedState
+            );
+
+            window.removeEventListener(
+                "resize",
+                updatePinnedState
             );
         };
     }, []);
@@ -840,8 +903,23 @@ export default function Home({
                     </select>
                 </div>
 
-                <div className="category-navigation-placeholder">
-                    <div className="category-navigation-shell">
+                <div
+                    ref={
+                        categoryPlaceholderRef
+                    }
+                    className={`category-navigation-placeholder ${
+                        categoriesPinned
+                            ? "is-pinned"
+                            : ""
+                    }`}
+                >
+                    <div
+                        className={`category-navigation-shell ${
+                            categoriesPinned
+                                ? "is-fixed"
+                                : ""
+                        }`}
+                    >
                         <nav
                             className="category-navigation"
                             ref={

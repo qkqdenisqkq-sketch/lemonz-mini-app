@@ -1066,53 +1066,28 @@ main {
 }
 
 .category-navigation-placeholder {
-    position: sticky;
-    top: var(--header-height);
-    z-index: 95;
-
-    height: auto;
-
+    position: relative;
+    height: 66px;
     margin:
         0
-        -10px
-        24px;
-
-    padding:
-        0;
-
-    background:
-        rgba(
-            13,
-            13,
-            13,
-            0.98
-        );
-
-    box-shadow:
         0
-        12px
-        26px
-        rgba(
-            0,
-            0,
-            0,
-            0.28
-        );
+        24px;
+}
 
-    backdrop-filter:
-        blur(20px);
-    -webkit-backdrop-filter:
-        blur(20px);
+.category-navigation-placeholder.is-pinned {
+    height: 66px;
 }
 
 .category-navigation-shell {
     position: relative;
-    z-index: 1;
+    z-index: 90;
 
-    width: 100%;
+    width: auto;
     max-width: 100%;
 
-    margin: 0;
+    margin:
+        0
+        -10px;
 
     padding:
         10px
@@ -1122,24 +1097,49 @@ main {
 
     border-top:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.04
-        );
-
+        rgba(255, 255, 255, 0.04);
     border-bottom:
         1px solid
-        rgba(
-            255,
-            255,
-            255,
-            0.08
-        );
+        rgba(255, 255, 255, 0.08);
 
     background:
-        transparent;
+        rgba(13, 13, 13, 0.98);
+
+    box-shadow:
+        0 10px 24px
+        rgba(0, 0, 0, 0.22);
+
+    backdrop-filter:
+        blur(20px);
+    -webkit-backdrop-filter:
+        blur(20px);
+}
+
+.category-navigation-shell.is-fixed {
+    position: fixed;
+
+    top:
+        var(--header-height);
+
+    left: 50%;
+
+    width: min(
+        100%,
+        520px
+    );
+
+    max-width: 520px;
+
+    margin: 0;
+
+    transform:
+        translateX(-50%);
+
+    z-index: 115;
+
+    box-shadow:
+        0 14px 30px
+        rgba(0, 0, 0, 0.4);
 }
 
 .category-navigation {
@@ -1260,7 +1260,7 @@ main {
     scroll-margin-top:
         calc(
             var(--header-height) +
-            76px
+            74px
         );
 }
 
@@ -3158,3 +3158,16 @@ main {
     }
 }
 
+
+
+@media (max-width: 520px) {
+    .category-navigation-shell.is-fixed {
+        right: 0;
+        left: 0;
+
+        width: 100%;
+        max-width: none;
+
+        transform: none;
+    }
+}
