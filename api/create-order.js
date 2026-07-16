@@ -20,6 +20,8 @@ function createOrderMessage(order) {
             ? order.items
             : [];
 
+    const comment = String(order.comment ?? "").trim();
+
     const itemsText = items
         .map((item, index) => {
             const options =
@@ -109,6 +111,9 @@ function createOrderMessage(order) {
         comment
             ? escapeHtml(comment)
             : "Без комментария",
+        "",
+        "<b>Комментаррий</b>",
+        comment ? escapeHtml(comment) : "Без комментария",
         "",
         `<b>Итого: ${formatPrice(
             order.total

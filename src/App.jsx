@@ -374,7 +374,7 @@ function App() {
         setCart([]);
     };
 
-const checkout = async () => {
+const checkout = async (comment = "") => {
     if (cart.length === 0) {
         showMessage("Корзина пуста");
         return;
