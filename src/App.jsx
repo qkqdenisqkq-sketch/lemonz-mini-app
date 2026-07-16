@@ -414,7 +414,15 @@ const checkout = async (comment = "") => {
                 item.options ?? [],
         })),
 
-        total: cartTotal,
+        comment:
+            String(
+                comment ?? ""
+            ).trim(),
+
+        total:
+            Number(
+                cartTotal
+            ),
     };
 
     try {
@@ -432,13 +440,39 @@ const checkout = async (comment = "") => {
             }
         );
 
-        const result =
-            await response.json();
+        const responseText =
+            await response.text();
 
-        if (!response.ok || !result.ok) {
+        let result;
+
+        try {
+            result =
+                responseText
+                    ? JSON.parse(
+                          responseText
+                      )
+                    : {};
+        } catch {
+            throw new Error(
+                response.ok
+                    ? "Сервер вернул некорректный ответ"
+                    : responseText
+                          .slice(
+                              0,
+                              180
+                          )
+                          .trim() ||
+                      `Ошибка сервера ${response.status}`
+            );
+        }
+
+        if (
+            !response.ok ||
+            !result.ok
+        ) {
             throw new Error(
                 result.error ||
-                    "Не удалось отправить заказ"
+                    `Ошибка сервера ${response.status}`
             );
         }
 
