@@ -10,7 +10,6 @@ import ProductModal from "./components/ProductModal";
 import ScrollTop from "./components/ScrollTop";
 
 import Home from "./pages/Home";
-import Catalog from "./pages/Catalog";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
@@ -46,6 +45,14 @@ function App() {
         );
 
     const [
+        favoriteProductIds,
+        setFavoriteProductIds,
+    ] = useLocalStorage(
+        "lemonz-favorites",
+        []
+    );
+
+    const [
         selectedProduct,
         setSelectedProduct,
     ] = useState(null);
@@ -61,6 +68,46 @@ function App() {
         haptic,
         showMessage,
     } = useTelegram();
+
+    const favoriteProducts =
+        useMemo(() => {
+            return products.filter(
+                (product) =>
+                    favoriteProductIds.includes(
+                        product.id
+                    )
+            );
+        }, [
+            products,
+            favoriteProductIds,
+        ]);
+
+    const toggleFavorite = (
+        productId
+    ) => {
+        haptic();
+
+        setFavoriteProductIds(
+            (currentIds) => {
+                if (
+                    currentIds.includes(
+                        productId
+                    )
+                ) {
+                    return currentIds.filter(
+                        (id) =>
+                            id !==
+                            productId
+                    );
+                }
+
+                return [
+                    ...currentIds,
+                    productId,
+                ];
+            }
+        );
+    };
 
     const cartCount = useMemo(() => {
         return cart.reduce(
@@ -555,6 +602,12 @@ const checkout = async () => {
                             products
                         }
                         user={user}
+                        favoriteProductIds={
+                            favoriteProductIds
+                        }
+                        onToggleFavorite={
+                            toggleFavorite
+                        }
                         onOpenCatalog={() =>
                             navigate(
                                 "Каталог"
@@ -566,17 +619,6 @@ const checkout = async () => {
                     />
                 )}
 
-                {activePage ===
-                    "Каталог" && (
-                    <Catalog
-                        products={
-                            products
-                        }
-                        onOpenProduct={
-                            setSelectedProduct
-                        }
-                    />
-                )}
 
                 {activePage ===
                     "Корзина" && (
@@ -617,6 +659,20 @@ const checkout = async () => {
                         user={user}
                         isAdmin={
                             isAdmin
+                        }
+                        favoriteProducts={
+                            favoriteProducts
+                        }
+                        onOpenProduct={
+                            setSelectedProduct
+                        }
+                        onToggleFavorite={
+                            toggleFavorite
+                        }
+                        onOpenCatalog={() =>
+                            navigate(
+                                "Главная"
+                            )
                         }
                         onOpenAdmin={() =>
                             navigate(

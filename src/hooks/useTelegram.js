@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from "react";
 
 const ADMIN_TELEGRAM_IDS = [
-    596691430,
+    123456789,
 ];
 
 export function useTelegram() {
@@ -34,34 +34,34 @@ export function useTelegram() {
         window.alert(message);
     };
 
-const haptic = (type = "selection") => {
-    if (type === "success") {
-        telegram?.HapticFeedback
-            ?.notificationOccurred?.(
-                "success"
-            );
-        return;
-    }
+    const haptic = (type = "selection") => {
+        if (type === "success") {
+            telegram?.HapticFeedback
+                ?.notificationOccurred?.(
+                    "success"
+                );
+            return;
+        }
 
-    if (type === "warning") {
-        telegram?.HapticFeedback
-            ?.notificationOccurred?.(
-                "warning"
-            );
-        return;
-    }
+        if (type === "warning") {
+            telegram?.HapticFeedback
+                ?.notificationOccurred?.(
+                    "warning"
+                );
+            return;
+        }
 
-    if (type === "medium") {
-        telegram?.HapticFeedback
-            ?.impactOccurred?.(
-                "medium"
-            );
-        return;
-    }
+        if (type === "medium") {
+            telegram?.HapticFeedback
+                ?.impactOccurred?.(
+                    "medium"
+                );
+            return;
+        }
 
-    telegram?.HapticFeedback
-        ?.selectionChanged?.();
-};
+        telegram?.HapticFeedback
+            ?.selectionChanged?.();
+    };
 
     return {
         telegram,

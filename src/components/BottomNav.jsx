@@ -6,7 +6,6 @@ export default function BottomNav({
 }) {
     const pages = [
         "Главная",
-        "Каталог",
         "Корзина",
         "Профиль",
     ];

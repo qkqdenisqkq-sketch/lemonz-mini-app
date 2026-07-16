@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 export default function Cart({
     cart,
     cartCount,
@@ -9,6 +11,13 @@ export default function Cart({
     onClear,
     onCheckout,
 }) {
+    const [comment, setComment] =
+        useState("");
+
+    const handleCheckout = () => {
+        onCheckout(comment.trim());
+    };
+
     return (
         <section className="cart-page">
             <div className="page-heading">
@@ -42,19 +51,16 @@ export default function Cart({
                     </h2>
 
                     <p>
-                        Добавь фигурки из
-                        каталога, и они
-                        появятся здесь.
+                        Добавь фигурки с
+                        главной страницы.
                     </p>
 
                     <button
                         type="button"
                         className="primary-button large-button"
-                        onClick={
-                            onOpenCatalog
-                        }
+                        onClick={onOpenCatalog}
                     >
-                        Открыть каталог
+                        Перейти к фигуркам
                     </button>
                 </div>
             ) : (
@@ -63,34 +69,25 @@ export default function Cart({
                         {cart.map((item) => (
                             <article
                                 className="cart-item"
-                                key={
-                                    item.cartId
-                                }
+                                key={item.cartId}
                             >
                                 <div className="cart-item-image">
                                     <img
-                                        src={
-                                            item.image
-                                        }
-                                        alt={
-                                            item.name
-                                        }
+                                        src={item.image}
+                                        alt={item.name}
                                     />
                                 </div>
 
                                 <div className="cart-item-info">
                                     <p className="category">
-                                        {
-                                            item.category
-                                        }
+                                        {item.category}
                                     </p>
 
                                     <h3>
                                         {item.name}
                                     </h3>
 
-                                    {item.options
-                                        ?.length >
+                                    {item.options?.length >
                                         0 && (
                                         <div className="cart-options">
                                             {item.options.map(
@@ -138,7 +135,6 @@ export default function Cart({
                                                         item.cartId
                                                     )
                                                 }
-                                                aria-label="Уменьшить количество"
                                             >
                                                 −
                                             </button>
@@ -156,7 +152,6 @@ export default function Cart({
                                                         item.cartId
                                                     )
                                                 }
-                                                aria-label="Увеличить количество"
                                             >
                                                 +
                                             </button>
@@ -178,6 +173,28 @@ export default function Cart({
                             </article>
                         ))}
                     </div>
+
+                    <label className="order-comment">
+                        <span>
+                            Комментарий к заказу
+                        </span>
+
+                        <textarea
+                            value={comment}
+                            maxLength={500}
+                            placeholder="Например: желаемый цвет подиума, сроки, детали персонажа или доставки"
+                            onChange={(event) =>
+                                setComment(
+                                    event.target
+                                        .value
+                                )
+                            }
+                        />
+
+                        <small>
+                            {comment.length}/500
+                        </small>
+                    </label>
 
                     <div className="cart-summary">
                         <div className="summary-row">
@@ -209,7 +226,7 @@ export default function Cart({
                             type="button"
                             className="primary-button checkout-button"
                             onClick={
-                                onCheckout
+                                handleCheckout
                             }
                         >
                             Оформить заказ

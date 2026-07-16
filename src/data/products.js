@@ -2,7 +2,19 @@ export const DEFAULT_CATEGORIES = [
     "Valorant",
     "Dota 2",
     "League of Legends",
+    "Anime",
+    "Аксессуары",
+    "CS2",
 ];
+
+export const CATEGORY_LOGOS = {
+    Valorant: "V",
+    "Dota 2": "D2",
+    "League of Legends": "L",
+    Anime: "A",
+    "Аксессуары": "+",
+    CS2: "CS",
+};
 
 export const DEFAULT_PRODUCTS = [
     {
@@ -12,6 +24,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Clove.png",
         popular: true,
+        isNew: true,
     },
     {
         id: 2,
@@ -20,6 +33,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Chamber.png",
         popular: true,
+        isNew: false,
     },
     {
         id: 3,
@@ -28,6 +42,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Jett.png",
         popular: true,
+        isNew: true,
     },
     {
         id: 4,
@@ -36,6 +51,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Killjoy.png",
         popular: false,
+        isNew: false,
     },
     {
         id: 5,
@@ -44,6 +60,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Axe.png",
         popular: true,
+        isNew: false,
     },
     {
         id: 6,
@@ -52,6 +69,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Pudge.png",
         popular: false,
+        isNew: false,
     },
     {
         id: 7,
@@ -60,6 +78,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7500,
         image: "/CrystalMaiden.png",
         popular: false,
+        isNew: true,
     },
     {
         id: 8,
@@ -68,6 +87,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Jinx.png",
         popular: true,
+        isNew: false,
     },
     {
         id: 9,
@@ -76,6 +96,7 @@ export const DEFAULT_PRODUCTS = [
         price: 7000,
         image: "/Ahri.png",
         popular: false,
+        isNew: true,
     },
     {
         id: 10,
@@ -84,6 +105,7 @@ export const DEFAULT_PRODUCTS = [
         price: 6500,
         image: "/Teemo.png",
         popular: false,
+        isNew: false,
     },
 ];
 
@@ -108,29 +130,21 @@ export const CUSTOM_OPTIONS = [
     },
 ];
 
-export const PRICE_FILTERS = [
+export const CATALOG_FILTERS = [
     {
-        id: "all",
-        title: "Любая цена",
-        min: 0,
-        max: Number.POSITIVE_INFINITY,
+        id: "priceAsc",
+        title: "Цена: по возрастанию",
     },
     {
-        id: "under7000",
-        title: "До 7 000 ₽",
-        min: 0,
-        max: 7000,
+        id: "priceDesc",
+        title: "Цена: по убыванию",
     },
     {
-        id: "7000to8000",
-        title: "7 000 - 8 000 ₽",
-        min: 7000,
-        max: 8000,
+        id: "popular",
+        title: "Популярные",
     },
     {
-        id: "over8000",
-        title: "От 8 000 ₽",
-        min: 8000,
-        max: Number.POSITIVE_INFINITY,
+        id: "new",
+        title: "Новые",
     },
 ];
