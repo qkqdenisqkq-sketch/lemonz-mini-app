@@ -35,12 +35,12 @@
 .section-label,.eyebrow { color: #965fce; }
 .home-catalog .section-title h2,.catalog-main-title h2 { color: #21172f; }
 .lemonz-portal { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 14px; margin: -10px 0 28px; }
-.portal-tile { position: relative; display: flex; flex-direction: column; text-align: left; align-items: flex-start; min-height: 158px; overflow: hidden; padding: 18px 14px; border: 0; border-radius: 21px; color: #21172f; cursor: pointer; background: radial-gradient(circle at 110% 85%,#dfbbf7,transparent 48%),linear-gradient(138deg,#e7c9fa,#f5eaff); box-shadow: 0 6px 18px rgba(103,53,134,.08); }
+.portal-tile { position: relative; display: flex; flex-direction: column; text-align: left; align-items: flex-start; min-height: 126px; overflow: hidden; padding: 13px 12px; border: 0; border-radius: 19px; color: #21172f; cursor: pointer; background: radial-gradient(circle at 110% 85%,#dfbbf7,transparent 48%),linear-gradient(138deg,#e7c9fa,#f5eaff); box-shadow: 0 6px 18px rgba(103,53,134,.08); }
 .portal-auction { color: #fff; background: radial-gradient(circle at 90% 100%,#af75c9,transparent 56%),linear-gradient(135deg,#4c335e,#75518e); }
-.portal-icon { font-size: 30px; line-height: 1.1; margin-bottom: 14px; }
+.portal-icon { font-size: 25px; line-height: 1.1; margin-bottom: 8px; }
 .portal-name { font-size: clamp(15px,4.4vw,20px); font-weight: 900; letter-spacing: -.035em; }
 .portal-tile small { max-width: 85%; font-size: 11px; margin-top: 5px; line-height: 1.35; }
-.portal-arrow { position: absolute; bottom: 14px; right: 13px; display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: rgba(255,255,255,.85); color: #7537b4; font-size: 20px; }
+.portal-arrow { position: absolute; bottom: 10px; right: 10px; display: grid; place-items: center; width: 27px; height: 27px; border-radius: 50%; background: rgba(255,255,255,.85); color: #7537b4; font-size: 18px; }
 
 .engagement-page { padding: 22px 14px 50px; color: #24172f; }
 .engagement-heading { padding: 10px 4px 18px; }
@@ -155,7 +155,7 @@
 .bid-history > div > span { color: #8050ac; font-weight: 800; font-size: 12px; }
 .bid-history > div > strong { font-size: 14px; }
 .bid-history > div > small { width: 100%; color: #998da0; font-size: 10px; }
-@media(max-width:380px) { .engagement-page { padding-left: 10px; padding-right: 10px; } .vote-card { gap: 8px; } .vote-card .figure-art { width: 85px; } .vote-action { width: 36px; } .auction-list-card .figure-art { height: 150px; } .portal-tile { min-height: 145px; padding: 14px 11px; } }
+@media(max-width:380px) { .engagement-page { padding-left: 10px; padding-right: 10px; } .vote-card { gap: 8px; } .vote-card .figure-art { width: 85px; } .vote-action { width: 36px; } .auction-list-card .figure-art { height: 150px; } .portal-tile { min-height: 123px; padding: 12px 10px; } }
 
 /* Mobile-first banners. A full-width second slide avoids text squeezed into
    the 100px side column that existed in the original layout. */
