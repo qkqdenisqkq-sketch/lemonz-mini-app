@@ -37,6 +37,7 @@ import "./styles/auction-list.css";
 import "./styles/product-detail.css";
 import "./styles/theme.css";
 import "./styles/admin-workspace.css";
+import "./styles/voting-reference.css";
 
 function App() {
     const [activePage, setActivePage] =
@@ -642,7 +643,7 @@ const checkout = async (comment = "") => {
 
     return (
         <div className={`app theme-${activeTheme} ${activePage === "Аукцион" ? (auctionDetailOpen ? "auction-detail-mode" : "auction-list-mode") : ""}`}>
-            {activePage !== "Аукцион" && <Header
+            {activePage !== "Аукцион" && activePage !== "Голосование" && <Header
                 user={user}
                 cartCount={cartCount}
                 theme={activeTheme}

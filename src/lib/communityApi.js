@@ -31,12 +31,15 @@ export async function uploadMedia(file) {
 }
 
 export const SAMPLE_SEASON = {
-    id: "preview", number: 1, ends_at: new Date(Date.now() + 9 * 86400000).toISOString(),
+    id: "preview", number: 1, ends_at: new Date(Date.now() + 8 * 86400000 + 14 * 3600000).toISOString(),
     candidates: [
-        { id: "p1", category: "lemonz", name: "Clove", universe: "Valorant", image_url: "/Clove.png", votes: 0, comments: 0 },
-        { id: "p2", category: "lemonz", name: "Iso", universe: "Valorant", image_url: "/Iso.png", votes: 0, comments: 0 },
-        { id: "p3", category: "lemonz", name: "Reyna", universe: "Valorant", image_url: "/Reyna.png", votes: 0, comments: 0 },
-    ], myVotes: {}, winners: [],
+        { id: "p1", category: "lemonz", name: "Clove", universe: "Valorant", image_url: "/Clove.png", votes: 128, comments: 24, previewCrop: [55, 534] },
+        { id: "p2", category: "lemonz", name: "Iso", universe: "Valorant", image_url: "/Iso.png", votes: 94, comments: 16, previewCrop: [55, 694] },
+        { id: "p3", category: "lemonz", name: "Reyna", universe: "Valorant", image_url: "/Reyna.png", votes: 72, comments: 9, previewCrop: [55, 848] },
+        { id: "p4", category: "community", name: "Jinx", universe: "Arcane", author_username: "mio_art", votes: 125, comments: 12, previewCrop: [55, 1140] },
+        { id: "p5", category: "community", name: "Gojo", universe: "Jujutsu Kaisen", author_username: "satoru", votes: 84, comments: 7, previewCrop: [55, 1291] },
+        { id: "p6", category: "community", name: "Stitch", universe: "Lilo & Stitch", author_username: "bluecat", votes: 29, comments: 4, previewCrop: [55, 1438] },
+    ], myVotes: { lemonz: "p1" }, winners: [],
 };
 
 export const SAMPLE_LOTS = [
