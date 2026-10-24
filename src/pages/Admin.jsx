@@ -802,7 +802,7 @@ export default function Admin({
                         />
 
                         <span>
-                            Популярный
+                            Популярное
                         </span>
                     </label>
 
@@ -825,10 +825,15 @@ export default function Admin({
                         />
 
                         <span>
-                            Новинка
+                            Новинки
                         </span>
                     </label>
                 </div>
+
+                <p className="admin-product-flags-hint">
+                    Выбранные подборки появятся на главной странице после сохранения фигурки.
+                    Можно отметить обе.
+                </p>
 
                 <button
                     type="submit"
@@ -984,18 +989,19 @@ export default function Admin({
                                                 ₽
                                             </strong>
 
-                                            <div className="admin-product-badges">
-                                                {product.popular && (
-                                                    <span>
-                                                        Популярное
-                                                    </span>
-                                                )}
-
-                                                {product.isNew && (
-                                                    <span>
-                                                        Новинка
-                                                    </span>
-                                                )}
+                                            <div className="admin-product-badges" aria-label={`Подборки главной страницы: ${product.name}`}>
+                                                <button
+                                                    type="button"
+                                                    className={product.popular ? "active" : ""}
+                                                    aria-pressed={Boolean(product.popular)}
+                                                    onClick={() => onSave({ ...product, popular: !product.popular })}
+                                                >Популярное</button>
+                                                <button
+                                                    type="button"
+                                                    className={product.isNew ? "active" : ""}
+                                                    aria-pressed={Boolean(product.isNew)}
+                                                    onClick={() => onSave({ ...product, isNew: !product.isNew })}
+                                                >Новинки</button>
                                             </div>
 
                                             <div className="admin-product-actions">

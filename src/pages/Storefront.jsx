@@ -1,23 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import LemonzIcon from "../components/LemonzIcon";
+import FigureArt from "../components/FigureArt";
 import { CATEGORY_ICONS } from "../data/products";
+import { getStorefrontShelves } from "../lib/storefrontShelves";
 
-// These exact image regions come from the design reference supplied by LEMONZ.
-// Keeping the portraits independent from the surrounding HTML means the layout,
-// product names, prices and navigation remain responsive and interactive.
+// Only the two activity banners use the reference artwork. Figurine shelves
+// always use the real catalog images and admin-controlled category flags.
 const REFERENCE = "/home-reference.png";
 const REFERENCE_WIDTH = 941;
 const REFERENCE_REGIONS = {
     vote: { x: 30, y: 501, width: 432, height: 226 },
     auction: { x: 478, y: 501, width: 433, height: 226 },
-    clove: { x: 34, y: 914, width: 202, height: 207 },
-    iso: { x: 259, y: 914, width: 202, height: 207 },
-    reyna: { x: 484, y: 914, width: 202, height: 207 },
-    gojo: { x: 710, y: 914, width: 202, height: 207 },
-    neon: { x: 34, y: 1335, width: 202, height: 197 },
-    pink: { x: 259, y: 1335, width: 202, height: 197 },
-    headphones: { x: 484, y: 1335, width: 202, height: 197 },
-    lily: { x: 710, y: 1335, width: 202, height: 197 },
 };
 
 const SLIDES = [
@@ -33,20 +26,6 @@ const HOME_CATEGORIES = [
     { name: "League of Legends", icon: CATEGORY_ICONS["League of Legends"], category: "League of Legends" },
     { name: "Anime", icon: CATEGORY_ICONS.Anime, category: "Anime" },
     { name: "Другие", icon: CATEGORY_ICONS["Аксессуары"], category: "Аксессуары" },
-];
-
-const POPULAR_SHOWCASE = [
-    { name: "Clove", category: "Valorant", art: "clove", samplePrice: 9500 },
-    { name: "Iso", category: "Valorant", art: "iso", samplePrice: 9500 },
-    { name: "Reyna", category: "Valorant", art: "reyna", samplePrice: 9500 },
-    { name: "Gojo", category: "Anime", art: "gojo", samplePrice: 8900 },
-];
-
-const NEW_SHOWCASE = [
-    { name: "Neon", category: "Valorant", art: "neon", samplePrice: 9500 },
-    { name: "Ahri", category: "League of Legends", art: "pink", samplePrice: 9500 },
-    { name: "Iso", category: "Valorant", art: "headphones", samplePrice: 9500 },
-    { name: "Sage", category: "Valorant", art: "lily", samplePrice: 9500 },
 ];
 
 function ReferenceCrop({ region, className = "" }) {
@@ -68,48 +47,48 @@ function ReferenceCrop({ region, className = "" }) {
     );
 }
 
-function Shelf({ title, entries, catalog, favoriteProductIds, onToggleFavorite, onOpenProduct, onUnavailable, onOpenCatalog }) {
+function Shelf({ title, products, favoriteProductIds, onToggleFavorite, onOpenProduct }) {
     return (
         <section className="storefront-shelf" aria-label={title}>
             <div className="storefront-section-title">
                 <h2>{title}</h2>
-                <button type="button" onClick={onOpenCatalog}>Смотреть все <LemonzIcon name="arrow" size={16} /></button>
             </div>
-            <div className="storefront-product-track">
-                {entries.map((entry, index) => {
-                    const product = catalog.find((item) => item.name.toLowerCase() === entry.name.toLowerCase());
-                    const isFavorite = product ? favoriteProductIds.includes(product.id) : false;
-                    const open = () => product ? onOpenProduct(product) : onUnavailable(entry.name);
+            {products.length > 0 ? (
+            <div className="storefront-product-track" role="region" aria-label={`Листай по горизонтали: ${title}`} tabIndex={0}>
+                {products.map((product) => {
+                    const isFavorite = favoriteProductIds.includes(product.id);
+                    const open = () => onOpenProduct(product);
                     return (
-                        <article className="storefront-product" key={`${entry.name}-${index}`}>
+                        <article className="storefront-product" key={product.id}>
                             <div className="storefront-product-photo">
-                                <button type="button" className="storefront-open-photo" onClick={open} aria-label={`Посмотреть ${entry.name}`}>
-                                    <ReferenceCrop region={entry.art} />
+                                <button type="button" className="storefront-open-photo" onClick={open} aria-label={`Посмотреть ${product.name}`}>
+                                    <FigureArt src={product.image} name={product.name} />
                                 </button>
                                 <button
                                     type="button"
                                     className={`storefront-favorite ${isFavorite ? "is-favorite" : ""}`}
-                                    onClick={() => product ? onToggleFavorite(product.id) : onUnavailable(entry.name)}
-                                    aria-label={isFavorite ? `Убрать ${entry.name} из избранного` : `Добавить ${entry.name} в избранное`}
+                                    onClick={() => onToggleFavorite(product.id)}
+                                    aria-label={isFavorite ? `Убрать ${product.name} из избранного` : `Добавить ${product.name} в избранное`}
                                 ><LemonzIcon name="heart" size={15} /></button>
                             </div>
                             <div className="storefront-product-details">
-                                <button type="button" onClick={open} className="storefront-product-name">{entry.name}</button>
-                                <p>{entry.category}</p>
+                                <button type="button" onClick={open} className="storefront-product-name">{product.name}</button>
+                                <p>{product.category}</p>
                                 <div className="storefront-product-footer">
-                                    <strong>{Number(product?.price ?? entry.samplePrice).toLocaleString("ru-RU")} ₽</strong>
-                                    <button type="button" aria-label={`Выбрать ${entry.name}`} onClick={open}><LemonzIcon name="bag" size={15} /></button>
+                                    <strong>{Number(product.price).toLocaleString("ru-RU")} ₽</strong>
+                                    <button type="button" aria-label={`Выбрать ${product.name}`} onClick={open}><LemonzIcon name="bag" size={15} /></button>
                                 </div>
                             </div>
                         </article>
                     );
                 })}
             </div>
+            ) : <p className="storefront-shelf-empty">Скоро здесь появятся фигурки.</p>}
         </section>
     );
 }
 
-export default function Storefront({ products, favoriteProductIds = [], onToggleFavorite, onOpenProduct, onUnavailable, onNavigate, onOpenCategory }) {
+export default function Storefront({ products, favoriteProductIds = [], onToggleFavorite, onOpenProduct, onNavigate, onOpenCategory }) {
     const [slideIndex, setSlideIndex] = useState(0);
     const slide = SLIDES[slideIndex];
     const changeSlide = (direction) => setSlideIndex((current) => (current + direction + SLIDES.length) % SLIDES.length);
@@ -119,7 +98,7 @@ export default function Storefront({ products, favoriteProductIds = [], onToggle
         return () => window.clearTimeout(timer);
     }, [slideIndex]);
 
-    const catalog = useMemo(() => products || [], [products]);
+    const { popular, newArrivals } = useMemo(() => getStorefrontShelves(products), [products]);
 
     return (
         <div className="storefront-page">
@@ -157,8 +136,8 @@ export default function Storefront({ products, favoriteProductIds = [], onToggle
                 ))}
             </nav>
 
-            <Shelf title="Популярное" entries={POPULAR_SHOWCASE} catalog={catalog} favoriteProductIds={favoriteProductIds} onToggleFavorite={onToggleFavorite} onOpenProduct={onOpenProduct} onUnavailable={onUnavailable} onOpenCatalog={() => onNavigate("Каталог")} />
-            <Shelf title="Новинки" entries={NEW_SHOWCASE} catalog={catalog} favoriteProductIds={favoriteProductIds} onToggleFavorite={onToggleFavorite} onOpenProduct={onOpenProduct} onUnavailable={onUnavailable} onOpenCatalog={() => onNavigate("Каталог")} />
+            <Shelf title="Популярное" products={popular} favoriteProductIds={favoriteProductIds} onToggleFavorite={onToggleFavorite} onOpenProduct={onOpenProduct} />
+            <Shelf title="Новинки" products={newArrivals} favoriteProductIds={favoriteProductIds} onToggleFavorite={onToggleFavorite} onOpenProduct={onOpenProduct} />
         </div>
     );
 }

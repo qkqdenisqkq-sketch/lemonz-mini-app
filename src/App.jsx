@@ -698,7 +698,6 @@ const checkout = async (comment = "") => {
                         favoriteProductIds={favoriteProductIds}
                         onToggleFavorite={toggleFavorite}
                         onOpenProduct={setSelectedProduct}
-                        onUnavailable={(name) => showMessage(`Фигурка ${name} пока представлена только как концепт. Следи за новинками LEMONZ!`)}
                         onNavigate={navigate}
                         onOpenCategory={(category) => {
                             navigate("Каталог");

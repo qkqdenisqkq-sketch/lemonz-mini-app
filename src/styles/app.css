@@ -3065,6 +3065,32 @@ main {
         var(--accent);
 }
 
+.admin-product-badges button {
+    padding: 6px 8px;
+    border: 1px solid #d9cce2;
+    border-radius: 9px;
+    background: #f4edf8;
+    color: #5b4a66;
+    font-size: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+.admin-product-badges button.active {
+    border-color: #ad7dd4;
+    background: #debbf8;
+    color: #311340;
+}
+.admin-product-badges button:focus-visible {
+    outline: 2px solid #934fbd;
+    outline-offset: 2px;
+}
+.admin-product-flags-hint {
+    margin: -9px 0 18px;
+    color: #736580;
+    font-size: 11px;
+    line-height: 1.45;
+}
+
 .admin-empty-category {
     display: grid;
 

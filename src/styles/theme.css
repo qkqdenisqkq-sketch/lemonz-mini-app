@@ -96,6 +96,10 @@ html[data-lemonz-theme="dark"] body {
 .app.theme-dark .storefront-favorite { color: #efd7ff; background: #342642; }
 .app.theme-dark .storefront-favorite.is-favorite { color: #edb2ff; background: #53396d; }
 .app.theme-dark .storefront-product-footer button { color: #f6d6ff; background: #55366c; }
+.app.theme-dark .storefront-shelf-empty { color: #decde9; background: #30243b; }
+.app.theme-dark .admin-product-badges button { color: #e2d6ea; background: #3a2b49; border-color: #645071; }
+.app.theme-dark .admin-product-badges button.active { color: #251331; background: #dfb6fa; border-color: #bc8de2; }
+.app.theme-dark .admin-product-flags-hint { color: #cfc0d8; }
 
 /* Catalog, category filters, catalog product tiles. */
 .app.theme-dark .category-navigation-shell,
