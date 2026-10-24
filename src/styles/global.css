@@ -3,13 +3,13 @@
 }
 
 :root {
-    --background: #0d0d0d;
-    --card: #181818;
-    --card-secondary: #232323;
-    --accent: #ffd335;
-    --text: #ffffff;
-    --muted: #929292;
-    --border: #2d2d2d;
+    --background: #faf7ff;
+    --card: #ffffff;
+    --card-secondary: #f2ecfa;
+    --accent: #a56be8;
+    --text: #21172f;
+    --muted: #786f85;
+    --border: #e9e1f1;
 
     --header-height:
         calc(
@@ -44,11 +44,7 @@ body {
     color: var(--text);
 
     background:
-        radial-gradient(
-            circle at top right,
-            rgba(255, 211, 53, 0.1),
-            transparent 35%
-        ),
+        radial-gradient(circle at top right, rgba(189, 143, 244, 0.14), transparent 42%),
         var(--background);
 }
 
@@ -89,7 +85,7 @@ textarea {
 
 input::placeholder,
 textarea::placeholder {
-    color: #666666;
+    color: #968ba4;
 }
 
 ::selection {

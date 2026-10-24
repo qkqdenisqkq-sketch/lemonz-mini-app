@@ -6,10 +6,13 @@ import {
 
 import Header from "./components/Header";
 import BottomNav from "./components/BottomNav";
-import ProductModal from "./components/ProductModal";
+import ProductDetail from "./components/ProductDetail";
 import ScrollTop from "./components/ScrollTop";
 
 import Home from "./pages/Home";
+import Storefront from "./pages/Storefront";
+import Voting from "./pages/Voting";
+import Auctions from "./pages/Auctions";
 import Cart from "./pages/Cart";
 import Profile from "./pages/Profile";
 import Admin from "./pages/Admin";
@@ -27,10 +30,27 @@ import {
 } from "./hooks/useTelegram";
 
 import "./styles/app.css";
+import "./styles/lemonz-light.css";
+import "./styles/storefront.css";
+import "./styles/auction-detail.css";
+import "./styles/auction-list.css";
+import "./styles/product-detail.css";
+import "./styles/theme.css";
+import "./styles/admin-workspace.css";
 
 function App() {
     const [activePage, setActivePage] =
         useState("Главная");
+
+    const [auctionDetailOpen, setAuctionDetailOpen] = useState(false);
+
+    const [theme, setTheme] = useLocalStorage("lemonz-theme", "light");
+    const activeTheme = theme === "dark" ? "dark" : "light";
+
+    useEffect(() => {
+        document.documentElement.dataset.lemonzTheme = activeTheme;
+        return () => { delete document.documentElement.dataset.lemonzTheme; };
+    }, [activeTheme]);
 
     const [products, setProducts] =
         useLocalStorage(
@@ -179,7 +199,8 @@ function App() {
             activePage === "Админ" &&
             !isAdmin
         ) {
-            setActivePage("Главная");
+            const timer = window.setTimeout(() => setActivePage("Главная"), 0);
+            return () => window.clearTimeout(timer);
         }
     }, [
         activePage,
@@ -202,10 +223,13 @@ function App() {
 
         setActivePage(page);
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
-        });
+        window.setTimeout(() => {
+            if (page === "Каталог") {
+                document.querySelector(".home-catalog")?.scrollIntoView({ behavior: "smooth" });
+            } else {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        }, 0);
     };
 
     const addConfiguredProduct = ({
@@ -617,21 +641,49 @@ const checkout = async (comment = "") => {
     };
 
     return (
-        <div className="app">
-            <Header
+        <div className={`app theme-${activeTheme} ${activePage === "Аукцион" ? (auctionDetailOpen ? "auction-detail-mode" : "auction-list-mode") : ""}`}>
+            {activePage !== "Аукцион" && <Header
                 user={user}
+                cartCount={cartCount}
+                theme={activeTheme}
+                onToggleTheme={() => { haptic(); setTheme((current) => current === "dark" ? "light" : "dark"); }}
                 onHome={() =>
                     navigate("Главная")
                 }
+                onSearch={() => {
+                    navigate("Каталог");
+                    window.setTimeout(() => document.querySelector(".search-toggle-button")?.click(), 90);
+                }}
+                onFavorites={() => navigate("Профиль")}
+                onCart={() => navigate("Корзина")}
                 onProfile={() =>
                     navigate("Профиль")
                 }
-            />
+            />}
 
             <main>
-                {activePage ===
-                    "Главная" && (
+                {activePage === "Главная" && (
+                    <Storefront
+                        products={products}
+                        favoriteProductIds={favoriteProductIds}
+                        onToggleFavorite={toggleFavorite}
+                        onOpenProduct={setSelectedProduct}
+                        onUnavailable={(name) => showMessage(`Фигурка ${name} пока представлена только как концепт. Следи за новинками LEMONZ!`)}
+                        onNavigate={navigate}
+                        onOpenCategory={(category) => {
+                            navigate("Каталог");
+                            window.setTimeout(() => {
+                                const section = [...document.querySelectorAll(".category-section")].find((item) => item.querySelector(".category-heading h2")?.textContent?.trim() === category);
+                                section?.scrollIntoView({ behavior: "smooth", block: "start" });
+                            }, 140);
+                        }}
+                    />
+                )}
+
+                {activePage === "Каталог" && (
+                    <div className="catalog-screen">
                     <Home
+                        onNavigate={navigate}
                         products={
                             products
                         }
@@ -651,6 +703,15 @@ const checkout = async (comment = "") => {
                             setSelectedProduct
                         }
                     />
+                    </div>
+                )}
+
+                {activePage === "Голосование" && (
+                    <Voting user={user} isAdmin={isAdmin} showMessage={showMessage} haptic={haptic} />
+                )}
+
+                {activePage === "Аукцион" && (
+                    <Auctions user={user} isAdmin={isAdmin} showMessage={showMessage} haptic={haptic} onDetailChange={setAuctionDetailOpen} onHome={() => navigate("Главная")} />
                 )}
 
 
@@ -720,6 +781,10 @@ const checkout = async (comment = "") => {
                     "Админ" &&
                     isAdmin && (
                         <Admin
+                            user={user}
+                            isAdmin={isAdmin}
+                            showMessage={showMessage}
+                            haptic={haptic}
                             products={
                                 products
                             }
@@ -745,7 +810,7 @@ const checkout = async (comment = "") => {
                 }
             />
 
-            <BottomNav
+            {!(activePage === "Аукцион" && auctionDetailOpen) && <BottomNav
                 activePage={
                     activePage
                 }
@@ -758,13 +823,15 @@ const checkout = async (comment = "") => {
                 isAdmin={
                     isAdmin
                 }
-            />
+            />}
 
             {selectedProduct && (
-                <ProductModal
+                <ProductDetail
                     product={
                         selectedProduct
                     }
+                    isFavorite={favoriteProductIds.includes(selectedProduct.id)}
+                    onToggleFavorite={() => toggleFavorite(selectedProduct.id)}
                     onClose={() =>
                         setSelectedProduct(
                             null

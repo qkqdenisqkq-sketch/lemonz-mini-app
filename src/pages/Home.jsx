@@ -10,12 +10,13 @@ import ProductCard from "../components/ProductCard";
 import {
     CATALOG_FILTERS,
     CATEGORY_LOGOS,
+    CATEGORY_ICONS,
     DEFAULT_CATEGORIES,
 } from "../data/products";
 
 export default function Home({
     products,
-    user,
+    onNavigate,
     onOpenProduct,
     favoriteProductIds = [],
     onToggleFavorite,
@@ -48,8 +49,6 @@ export default function Home({
             filterId: "priceAsc",
             images: [
                 "/Clove.png",
-                "/Jett.png",
-                "/Chamber.png",
             ],
         },
         {
@@ -62,8 +61,6 @@ export default function Home({
                 "Смотреть новинки",
             filterId: "new",
             images: [
-                "/Clove.png",
-                "/Jett.png",
                 "/Chamber.png",
             ],
         },
@@ -78,8 +75,6 @@ export default function Home({
             filterId: "popular",
             images: [
                 "/Jinx.png",
-                "/Killjoy.png",
-                "/Axe.png",
             ],
         },
         {
@@ -92,7 +87,6 @@ export default function Home({
                 "Выбрать персонажа",
             filterId: "priceAsc",
             images: [
-                "/Jett.png",
                 "/Clove.png",
             ],
         },
@@ -807,6 +801,21 @@ export default function Home({
                 </div>
             </section>
 
+            <section className="lemonz-portal" aria-label="Активности LEMONZ">
+                <button type="button" className="portal-tile portal-vote" onClick={() => onNavigate("Голосование")}>
+                    <span className="portal-icon">♕</span>
+                    <span className="portal-name">ГОЛОСОВАНИЕ</span>
+                    <small>Выбери нового героя</small>
+                    <span className="portal-arrow">↗</span>
+                </button>
+                <button type="button" className="portal-tile portal-auction" onClick={() => onNavigate("Аукцион")}>
+                    <span className="portal-icon">⚒</span>
+                    <span className="portal-name">АУКЦИОН</span>
+                    <small>Уникальные фигурки 1/1</small>
+                    <span className="portal-arrow">↗</span>
+                </button>
+            </section>
+
             <section className="catalog home-catalog">
                 <div className="section-title catalog-main-title">
                     <div>
@@ -960,11 +969,7 @@ export default function Home({
                                             className="category-logo"
                                             aria-hidden="true"
                                         >
-                                            {
-                                                CATEGORY_LOGOS[
-                                                    category
-                                                ] ?? "•"
-                                            }
+                                            {CATEGORY_ICONS[category] ? <img src={CATEGORY_ICONS[category]} alt="" /> : CATEGORY_LOGOS[category] ?? "•"}
                                         </span>
 
                                         <span>
@@ -1012,11 +1017,7 @@ export default function Home({
                                                 className="category-heading-logo"
                                                 aria-hidden="true"
                                             >
-                                                {
-                                                    CATEGORY_LOGOS[
-                                                        category
-                                                    ] ?? "•"
-                                                }
+                                                {CATEGORY_ICONS[category] ? <img src={CATEGORY_ICONS[category]} alt="" /> : CATEGORY_LOGOS[category] ?? "•"}
                                             </span>
 
                                             <div>

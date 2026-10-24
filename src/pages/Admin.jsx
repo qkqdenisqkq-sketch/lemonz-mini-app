@@ -8,6 +8,26 @@ import {
 import {
     DEFAULT_CATEGORIES,
 } from "../data/products";
+import Voting from "./Voting";
+import Auctions from "./Auctions";
+
+const ADMIN_SECTIONS = [
+    { id: "products", label: "Фигурки", icon: "✦" },
+    { id: "voting", label: "Голосование", icon: "◈" },
+    { id: "auctions", label: "Аукцион", icon: "◇" },
+];
+
+function AdminSectionTabs({ active, onChange }) {
+    return <nav className="admin-workspace-tabs" aria-label="Разделы админ-панели">
+        {ADMIN_SECTIONS.map((section) => <button
+            key={section.id}
+            type="button"
+            className={active === section.id ? "active" : ""}
+            onClick={() => onChange(section.id)}
+            aria-current={active === section.id ? "page" : undefined}
+        ><span aria-hidden="true">{section.icon}</span>{section.label}</button>)}
+    </nav>;
+}
 
 const EMPTY_FORM = {
     id: null,
@@ -166,7 +186,12 @@ export default function Admin({
     onSave,
     onDelete,
     onReset,
+    user,
+    isAdmin,
+    showMessage,
+    haptic,
 }) {
+    const [activeSection, setActiveSection] = useState("products");
     const [
         form,
         setForm,
@@ -240,7 +265,7 @@ export default function Admin({
                 handleWheel
             );
         };
-    }, []);
+    }, [activeSection]);
 
     const categories =
         useMemo(() => {
@@ -479,6 +504,16 @@ export default function Admin({
         resetForm();
     };
 
+    if (activeSection !== "products") {
+        return <section className="admin-page">
+            <div className="page-heading admin-page-heading"><div><p className="section-label">УПРАВЛЕНИЕ</p><h1>Админ-панель</h1></div></div>
+            <AdminSectionTabs active={activeSection} onChange={setActiveSection} />
+            {activeSection === "voting"
+                ? <Voting user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />
+                : <Auctions user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />}
+        </section>;
+    }
+
     return (
         <section className="admin-page">
             <div className="page-heading admin-page-heading">
@@ -502,6 +537,8 @@ export default function Admin({
                     Сбросить
                 </button>
             </div>
+
+            <AdminSectionTabs active={activeSection} onChange={setActiveSection} />
 
             <form
                 className="admin-form admin-product-form"

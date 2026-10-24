@@ -1,3 +1,5 @@
+import FigureArt from "./FigureArt";
+
 export default function ProductCard({
     product,
     onOpen,
@@ -11,10 +13,7 @@ export default function ProductCard({
                 aria-label={`Открыть фигурку ${product.name}`}
             >
                 <div className="product-image">
-                    <img
-                        src={product.image}
-                        alt={product.name}
-                    />
+                    <FigureArt src={product.image} name={product.name} />
                 </div>
             </button>
 

@@ -1,8 +1,9 @@
 import { useEffect, useMemo } from "react";
 
-const ADMIN_TELEGRAM_IDS = [
-    123456789,
-];
+const ADMIN_TELEGRAM_IDS = String(import.meta.env.VITE_ADMIN_TELEGRAM_IDS || "")
+    .split(",")
+    .map((value) => Number(value.trim()))
+    .filter((value) => Number.isSafeInteger(value) && value > 0);
 
 export function useTelegram() {
     const telegram = window.Telegram?.WebApp;

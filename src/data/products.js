@@ -16,6 +16,15 @@ export const CATEGORY_LOGOS = {
     CS2: "CS",
 };
 
+export const CATEGORY_ICONS = {
+    Valorant: "/valorant.svg",
+    "Dota 2": "/dota2.svg",
+    "League of Legends": "/lol.svg",
+    Anime: "/anime.svg",
+    "Аксессуары": "/accessories.svg",
+    CS2: "/cs2.svg",
+};
+
 export const DEFAULT_PRODUCTS = [
     {
         id: 1,

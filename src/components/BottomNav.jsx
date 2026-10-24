@@ -1,3 +1,5 @@
+import LemonzIcon from "./LemonzIcon";
+
 export default function BottomNav({
     activePage,
     onNavigate,
@@ -6,9 +8,12 @@ export default function BottomNav({
 }) {
     const pages = [
         "Главная",
+        "Каталог",
         "Корзина",
         "Профиль",
     ];
+
+    const icons = { "Главная": "home", "Каталог": "grid", "Корзина": "cart", "Профиль": "user", "Админ": "settings" };
 
     if (isAdmin) {
         pages.push("Админ");
@@ -35,6 +40,7 @@ export default function BottomNav({
                         onNavigate(page)
                     }
                 >
+                    <span className="bottom-nav-icon" aria-hidden="true"><LemonzIcon name={icons[page]} size={24} /></span>
                     <span>{page}</span>
 
                     {page === "Корзина" &&

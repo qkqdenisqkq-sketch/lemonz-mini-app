@@ -1,0 +1,326 @@
+/* Accessible finishing touches for the light skin. */
+.app:not(.theme-dark) .empty-cart {
+  color: #32263c;
+  background: #fff;
+  border-color: #dacee7;
+}
+.app:not(.theme-dark) .total-row { border-color: #e1d6e9; }
+.app:not(.theme-dark) .cart-options span { color: #654677; background: #eee3f8; }
+.app:not(.theme-dark) .favorites-empty,
+.app:not(.theme-dark) .admin-category-panel,
+.app:not(.theme-dark) .admin-image-upload,
+.app:not(.theme-dark) .admin-product-flags .admin-checkbox {
+  color: #2d2038;
+  background: #fff;
+  border-color: #e2d6eb;
+}
+.app:not(.theme-dark) .admin-image-preview { background: #f4ebfb; border-color: #cfb9df; }
+.app:not(.theme-dark) .admin-image-placeholder { color: #675872; }
+.app:not(.theme-dark) .admin-total-products,
+.app:not(.theme-dark) .favorites-count { background: #eee2f8; border-color: #dbc7ec; color: #7442aa; }
+.app:not(.theme-dark) .admin-category-tabs button { color: #674d79; background: #f0e8f6; border-color: #e0d0eb; }
+.app:not(.theme-dark) .admin-category-tabs button strong { color: #7445a5; background: #fff; }
+.app:not(.theme-dark) .admin-category-tabs button.active { color: #281432; background: #d1a3f6; border-color: #b787e6; }
+.app:not(.theme-dark) .admin-category-tabs button.active strong { color: #efd7ff; background: #513165; }
+.app:not(.theme-dark) .admin-image-error { color: #ae2a40; }
+.order-success-modal { color: #fff; }
+.app:not(.theme-dark) .vote-card-info > span,
+.app:not(.theme-dark) .vote-author,
+.app:not(.theme-dark) .comment-item span,
+.app:not(.theme-dark) .auction-hub-price-box small,
+.app:not(.theme-dark) .auction-lot-stat > span,
+.app:not(.theme-dark) .auction-hub-featured-body p,
+.app:not(.theme-dark) .auction-hub-small-body > small,
+.app:not(.theme-dark) .auction-lot-bid-row small,
+.app:not(.theme-dark) .product-detail-checkout-price small,
+.app:not(.theme-dark) .product-detail-subtitle,
+.app:not(.theme-dark) .product-detail-option-text small {
+  color: #6a5a75;
+}
+.app:not(.theme-dark) .auction-hub-intro p,
+.app:not(.theme-dark) .auction-lot-description > p,
+.app:not(.theme-dark) .auction-lot-shipping,
+.app:not(.theme-dark) .auction-hub-rules p { color: #66596d; }
+.storefront-theme-button { transition: transform .17s ease, background .17s ease; }
+.storefront-theme-button svg { transition: transform .2s ease; }
+.storefront-theme-button:active svg { transform: rotate(20deg); }
+.product-detail-new-tag { background: #7640ae; }
+
+/* Dark mode: never invert photos or reference imagery. Only change UI surfaces. */
+html[data-lemonz-theme="dark"] {
+  --background: #15111c;
+  --card: #241c2e;
+  --card-secondary: #332641;
+  --accent: #cf9bfa;
+  --text: #f5effa;
+  --muted: #c1b0d0;
+  --border: #483852;
+  background: #100d16;
+  color-scheme: dark;
+}
+html[data-lemonz-theme="dark"] body {
+  color: #f5effa;
+  background: #100d16;
+}
+.app.theme-dark {
+  background: #15111c;
+  color: #f5effa;
+}
+.app.theme-dark button,
+.app.theme-dark input,
+.app.theme-dark textarea,
+.app.theme-dark select { color-scheme: dark; }
+
+/* Shared header and bottom navigation. */
+.app.theme-dark .storefront-header { background: #231b2e; border-color: #3d3048; }
+.app.theme-dark .storefront-brand .logo-text { color: #fcf8ff; }
+.app.theme-dark .storefront-brand-icon { color: #ca93f4; }
+.app.theme-dark .storefront-header-icon { color: #f5ebfc; background: #3c2b4d; }
+.app.theme-dark .storefront-theme-button { color: #ffe0a0; background: #49365c; }
+.app.theme-dark .storefront-header-profile { color: #f6e9ff; background: #51386b; }
+.app.theme-dark .bottom-navigation { border-color: #3e314a; background: rgba(29,23,38,.98); box-shadow: 0 -7px 20px rgba(0,0,0,.18); }
+.app.theme-dark .bottom-navigation button { color: #c5b4d3; }
+.app.theme-dark .bottom-navigation button.active { color: #efd4ff; background: #4a335f; }
+.app.theme-dark .bottom-navigation .cart-badge { background: #bb7dea; color: #1e1228; }
+
+/* Main page: preserve hero and banner photos exactly as designed. */
+.app.theme-dark .storefront-page { color: #f5edfb; background: linear-gradient(180deg,#20182a 0%,#15111c 58%,#15111c 100%); }
+.app.theme-dark .storefront-categories button { background: #34273f; color: #e5d8ed; }
+.app.theme-dark .storefront-categories button.active { color: #22122d; background: #ca97ef; }
+.app.theme-dark .storefront-section-title h2 { color: #f5edf9; }
+.app.theme-dark .storefront-section-title > button { color: #d2a0ff; }
+.app.theme-dark .storefront-product { border-color: #4b3955; background: #241c2d; box-shadow: 0 3px 12px rgba(0,0,0,.22); }
+.app.theme-dark .storefront-product-name,
+.app.theme-dark .storefront-product-footer strong { color: #f8f1fd; }
+.app.theme-dark .storefront-product-details p { color: #c2b1cf; }
+.app.theme-dark .storefront-favorite { color: #efd7ff; background: #342642; }
+.app.theme-dark .storefront-favorite.is-favorite { color: #edb2ff; background: #53396d; }
+.app.theme-dark .storefront-product-footer button { color: #f6d6ff; background: #55366c; }
+
+/* Catalog, category filters, catalog product tiles. */
+.app.theme-dark .category-navigation-shell,
+.app.theme-dark .category-navigation-shell.is-fixed { background: #1d1726; border-color: #3c2d46; box-shadow: 0 9px 23px rgba(0,0,0,.22); }
+.app.theme-dark .category-navigation button { background: #32253e; border-color: #4b365c; color: #e0cfe9; }
+.app.theme-dark .category-navigation button.active { background: #af75de; border-color: #af75de; color: #190e22; }
+.app.theme-dark .category-navigation button.active .category-logo { background: #311d40; color: #fff; }
+.app.theme-dark .catalog-main-title h2,
+.app.theme-dark .home-catalog .section-title h2,
+.app.theme-dark .category-heading h2 { color: #f3eafa; }
+.app.theme-dark .search-toggle-button { color: #edd7fc; background: #34263e; border-color: #574368; }
+.app.theme-dark .search-toggle-button.active { color: #251230; background: #c18ae9; }
+.app.theme-dark .category-heading > span { color: #e9c4ff; background: #3b2b4b; border-color: #4c365f; }
+.app.theme-dark .product-image { background: linear-gradient(145deg,#513965,#76558e); }
+.app.theme-dark .empty-category { background: #241c2e; border-color: #584366; }
+.app.theme-dark .empty-category span { color: #deb2ff; }
+.app.theme-dark .empty-category p { color: #c5b3d2; }
+.app.theme-dark .product-card,
+.app.theme-dark .cart-item,
+.app.theme-dark .order-comment,
+.app.theme-dark .cart-summary,
+.app.theme-dark .admin-form,
+.app.theme-dark .admin-product { background: #241c2e; border-color: #463650; }
+.app.theme-dark .category { color: #dbaafc; }
+.app.theme-dark .product-card h3,
+.app.theme-dark .cart-item h3,
+.app.theme-dark .admin-product h3 { color: #f8effd; }
+.app.theme-dark .cart-item-image,
+.app.theme-dark .admin-product-image { background: #3a2a48; }
+.app.theme-dark .cart-options span { color: #efdcfb; background: #453352; }
+.app.theme-dark .quantity-control { background: #36283f; border-color: #665071; }
+.app.theme-dark .quantity-control button { color: #f2e6fb; }
+.app.theme-dark .total-row { color: #f7edfe; border-color: #504059; }
+.app.theme-dark .empty-cart { color: #f2e8f9; background: #241c2d; border-color: #544065; }
+.app.theme-dark .profile-id { color: #b9a9c7; }
+.app.theme-dark .profile-avatar { color: #24152d; background: #c490f3; }
+.app.theme-dark .favorites-empty,
+.app.theme-dark .admin-category-panel,
+.app.theme-dark .admin-image-upload { color: #f3eafb; background: #241c2e; border-color: #544166; }
+.app.theme-dark .favorites-count,
+.app.theme-dark .admin-total-products { background: #3f2d51; border-color: #604675; color: #e8c1ff; }
+.app.theme-dark .admin-image-preview { background: #352641; border-color: #674e77; }
+.app.theme-dark .admin-image-placeholder { color: #c7b8d5; }
+.app.theme-dark .admin-product-flags .admin-checkbox { background: #34273f; border-color: #604a70; }
+.app.theme-dark .admin-category-tabs button { color: #e1cce9; background: #352742; border-color: #614975; }
+.app.theme-dark .admin-category-tabs button strong { color: #e8bcff; background: #493456; }
+.app.theme-dark .admin-category-tabs button.active { color: #27152e; background: #cb96ef; border-color: #cb96ef; }
+.app.theme-dark .admin-category-tabs button.active strong { color: #ead2f9; background: #50346a; }
+.app.theme-dark .primary-button { color: #21142b; background: #cea0f3; }
+.app.theme-dark .secondary-button { color: #faf2ff; background: #533962; }
+.app.theme-dark .order-comment small { color: #b9a8c5; }
+.app.theme-dark .app-select,
+.app.theme-dark .catalog-sort { background-color: #2b2036; }
+.app.theme-dark input:not([type="checkbox"]),
+.app.theme-dark textarea,
+.app.theme-dark select { color: #f9f2fe; background-color: #2c2238; border-color: #645273; }
+.app.theme-dark input::placeholder,
+.app.theme-dark textarea::placeholder { color: #c4b1d0; }
+.app.theme-dark .search-icon { color: #c3a5d7; }
+.app.theme-dark .order-comment textarea { color: #f8efff; background: #2b2236; }
+
+/* Community vote, comments and moderation. */
+.app.theme-dark .engagement-page { color: #f6effc; background: #15111c; }
+.app.theme-dark .engagement-heading p,
+.app.theme-dark .category-explain p { color: #c5b4d1; }
+.app.theme-dark .engagement-kicker { color: #d09cf8; }
+.app.theme-dark .season-clock { background: linear-gradient(110deg,#3b2c50,#694987); }
+.app.theme-dark .season-clock p,
+.app.theme-dark .season-clock div span { color: #f0d9ff; }
+.app.theme-dark .engagement-tabs { background: #30233c; }
+.app.theme-dark .engagement-tabs button { color: #d1bfdf; }
+.app.theme-dark .engagement-tabs button.active { color: #f9efff; background: #644580; }
+.app.theme-dark .vote-card,
+.app.theme-dark .voting-info,
+.app.theme-dark .winner-history,
+.app.theme-dark .bid-history,
+.app.theme-dark .engagement-admin { background: #241c2e; border-color: #483850; box-shadow: 0 3px 12px rgba(0,0,0,.1); }
+.app.theme-dark .vote-card-info h3,
+.app.theme-dark .vote-card-info strong,
+.app.theme-dark .voting-info h2,
+.app.theme-dark .winner-history h2,
+.app.theme-dark .bid-history h2,
+.app.theme-dark .engagement-admin h2 { color: #f6edfd; }
+.app.theme-dark .vote-card-info > span,
+.app.theme-dark .vote-card-info strong small,
+.app.theme-dark .vote-author,
+.app.theme-dark .voting-info p,
+.app.theme-dark .winner-history p,
+.app.theme-dark .winner-history > div span,
+.app.theme-dark .comment-item span,
+.app.theme-dark .empty-view { color: #c7b5d3; }
+.app.theme-dark .comments-link { color: #dcacf9; }
+.app.theme-dark .vote-action { color: #fff; background: #66438a; }
+.app.theme-dark .vote-action.selected { color: #24152d; background: #d4a0fb; }
+.app.theme-dark .vote-action:disabled,
+.app.theme-dark .engagement-primary:disabled,
+.app.theme-dark .auction-lot-bid-action:disabled { opacity: .72; }
+.app.theme-dark .demo-notice { color: #ead3fc; background: #342541; border-color: #604779; }
+.app.theme-dark .ban-notice { color: #ffdbde; background: #512c3b; border-color: #8f4a62; }
+.app.theme-dark .engagement-modal,
+.app.theme-dark .auction-lot-bid-sheet { color: #f7effd; background: #241c2e; }
+.app.theme-dark .engagement-modal > p,
+.app.theme-dark .engagement-modal label,
+.app.theme-dark .engagement-modal .identity-note,
+.app.theme-dark .comment-feed > p { color: #dac9e5; }
+.app.theme-dark .engagement-modal input,
+.app.theme-dark .engagement-modal textarea,
+.app.theme-dark .engagement-admin input { color: #f8f0fc; background: #30243e; border-color: #674d7a; }
+.app.theme-dark .engagement-modal .identity-note { background: #3a294c; }
+.app.theme-dark .comment-item { border-color: #4b3959; }
+.app.theme-dark .comment-item p { color: #eee3f6; }
+.app.theme-dark .comment-item strong { color: #e6b9ff; }
+.app.theme-dark .modal-exit,
+.app.theme-dark .engagement-admin button { color: #f1d5ff; background: #4b335f; }
+.app.theme-dark .terms-check { color: #e8d8f1; }
+
+/* Auction listing. */
+.app.theme-dark.auction-list-mode,
+.app.theme-dark .auction-hub-screen.engagement-page { background: #15111c; color: #f5edfc; }
+.app.theme-dark .auction-hub-intro h1,
+.app.theme-dark .auction-hub-featured-body h2,
+.app.theme-dark .auction-hub-section-title h2 { color: #f8f1fb; }
+.app.theme-dark .auction-hub-intro h1 span,
+.app.theme-dark .auction-hub-kicker { color: #d7a3f7; }
+.app.theme-dark .auction-hub-intro p,
+.app.theme-dark .auction-hub-featured-body p,
+.app.theme-dark .auction-hub-small-body p,
+.app.theme-dark .auction-hub-small-body > small,
+.app.theme-dark .auction-hub-maker,
+.app.theme-dark .auction-hub-demo { color: #c7b7d0; }
+.app.theme-dark .auction-hub-tabs { background: #31263e; }
+.app.theme-dark .auction-hub-tabs button { color: #d1bfe0; }
+.app.theme-dark .auction-hub-tabs button.active { color: #f9edff; background: #634480; }
+.app.theme-dark .auction-hub-tabs button span { color: #e8c1ff; background: #4a335f; }
+.app.theme-dark .auction-hub-featured,
+.app.theme-dark .auction-hub-small-card,
+.app.theme-dark .auction-hub-empty { color: #f7effc; background: #241c2e; border-color: #4a3958; box-shadow: 0 4px 14px rgba(0,0,0,.18); }
+.app.theme-dark .auction-hub-small-open { color: inherit; }
+.app.theme-dark .auction-hub-small-kicker,
+.app.theme-dark .auction-hub-small-time { color: #d8a7ff; }
+.app.theme-dark .auction-hub-empty p { color: #c3b2ce; }
+.app.theme-dark .auction-hub-price-box { background: linear-gradient(105deg,#463159,#342443); }
+.app.theme-dark .auction-hub-price-box > div + div { border-color: #6e567d; }
+.app.theme-dark .auction-hub-price-box small { color: #decce7; }
+.app.theme-dark .auction-hub-price-box strong { color: #fcf7ff; }
+.app.theme-dark .auction-hub-feature-cta { color: #fff; background: #16101c; }
+.app.theme-dark .auction-hub-section-title > span { color: #efd3ff; background: #48325e; }
+.app.theme-dark .auction-hub-rules { background: #30243f; }
+.app.theme-dark .auction-hub-rules strong { color: #f3e5ff; }
+.app.theme-dark .auction-hub-rules p { color: #d0bddc; }
+
+/* Auction lot details and bid bottom sheet. */
+.app.theme-dark.auction-detail-mode,
+.app.theme-dark .auction-lot-screen.engagement-page { background: #15111c; color: #f6effa; }
+.app.theme-dark .auction-lot-topbar h2,
+.app.theme-dark .auction-lot-description h1,
+.app.theme-dark .auction-lot-maker strong,
+.app.theme-dark .auction-lot-bids h2,
+.app.theme-dark .auction-lot-bid-user { color: #f7effd; }
+.app.theme-dark .auction-lot-topbar button { color: #e6d2ef; }
+.app.theme-dark .auction-lot-description > p,
+.app.theme-dark .auction-lot-description > .auction-lot-full-description,
+.app.theme-dark .auction-lot-empty-bids,
+.app.theme-dark .auction-lot-bid-row small,
+.app.theme-dark .auction-lot-demo-note { color: #c4b3cf; }
+.app.theme-dark .auction-lot-dots button { background: #56415f; }
+.app.theme-dark .auction-lot-dots button.active { background: #cc96f3; }
+.app.theme-dark .auction-lot-stats { background: linear-gradient(110deg,#48335b,#352544); }
+.app.theme-dark .auction-lot-stat + .auction-lot-stat { border-color: #775b84; }
+.app.theme-dark .auction-lot-stat > span { color: #e0cdea; }
+.app.theme-dark .auction-lot-stat strong { color: #fff8ff; }
+.app.theme-dark .auction-lot-interest-track { background: #493858; }
+.app.theme-dark .auction-lot-interest > span { color: #dccde3; }
+.app.theme-dark .auction-lot-next { color: #eadbf2; background: #332742; }
+.app.theme-dark .auction-lot-next strong { color: #ddaafa; }
+.app.theme-dark .auction-lot-bid-row { border-color: #45384e; }
+.app.theme-dark .auction-lot-shipping { color: #d9c9e5; background: #30243e; }
+.app.theme-dark .auction-lot-shipping > span { border-color: #665375; }
+.app.theme-dark .auction-lot-bid-sheet > p,
+.app.theme-dark .auction-lot-bid-sheet > label.terms-check,
+.app.theme-dark .auction-lot-bid-sheet > small { color: #d3c0e0; }
+.app.theme-dark .auction-lot-bid-sheet > p strong { color: #dfacff; }
+.app.theme-dark .auction-lot-sheet-heading span { color: #daa7fc; }
+.app.theme-dark .auction-closed,
+.app.theme-dark .win-notice { color: #ebd1fc; background: #423158; }
+.app.theme-dark .auction-lot-sheet-heading button { color: #f0d8fe; background: #473357; }
+.app.theme-dark .auction-lot-bid-sheet input[type=number] { background: #2d213a; border-color: #644d76; color: #faf0ff; }
+
+/* Product detail opened from the storefront or catalog. */
+.app.theme-dark .product-detail-page { color: #f7eefc; background: #1a1423; border-color: #51405d; }
+.app.theme-dark .product-detail-topbar { background: #241b2e; border-color: #44334f; }
+.app.theme-dark .product-detail-round-button { color: #f6ebff; background: #423052; }
+.app.theme-dark .product-detail-favorite.active { color: #f0bafa; background: #69457f; }
+.app.theme-dark .product-detail-topbar-brand { color: #fff6ff; }
+.app.theme-dark .product-detail-topbar-brand small { color: #d5bbdf; }
+.app.theme-dark .product-detail-scroll { background: linear-gradient(180deg,#21182c,#1a1423 45%,#1a1423); }
+.app.theme-dark .product-detail-photo { background: radial-gradient(ellipse at 51% 47%,#6d5282,#443157 65%,#322441); }
+.app.theme-dark .product-detail-photo-footer { color: #dbc4ed; }
+.app.theme-dark .product-detail-eyebrow,
+.app.theme-dark .product-detail-eyebrow strong,
+.app.theme-dark .product-detail-section-heading small { color: #dda9fc; }
+.app.theme-dark .product-detail-content h2,
+.app.theme-dark .product-detail-section-heading h3 { color: #fff6ff; }
+.app.theme-dark .product-detail-subtitle { color: #cbb6da; }
+.app.theme-dark .product-detail-price-panel { background: linear-gradient(110deg,#493359,#3c294f); border-color: #6b5080; }
+.app.theme-dark .product-detail-price-panel small { color: #dcc5eb; }
+.app.theme-dark .product-detail-price-panel strong { color: #faf0ff; }
+.app.theme-dark .product-detail-price-panel > span { color: #efd5ff; background: #62477a; }
+.app.theme-dark .product-detail-benefits span { color: #eddbf9; background: #2d213a; border-color: #513b64; }
+.app.theme-dark .product-detail-section-heading > span { color: #d0bedc; }
+.app.theme-dark .product-detail-option { color: #f5ebfc; background: #292032; border-color: #50405f; }
+.app.theme-dark .product-detail-option.selected { background: #413057; border-color: #a875d4; }
+.app.theme-dark .product-detail-option-check { color: #edd2ff; background: #483456; border-color: #6c4e80; }
+.app.theme-dark .product-detail-option.selected .product-detail-option-check { color: #26152f; background: #d2a2f5; }
+.app.theme-dark .product-detail-option-text small,
+.app.theme-dark .product-detail-checkout-price small { color: #d0bedb; }
+.app.theme-dark .product-detail-option > b { color: #e2b4ff; }
+.app.theme-dark .product-detail-nickname { color: #e1c9f1; }
+.app.theme-dark .product-detail-note { color: #dfcfea; background: #332641; }
+.app.theme-dark .product-detail-checkout { background: #251d2e; border-color: #4a3957; }
+.app.theme-dark .product-detail-checkout-price strong { color: #fff6ff; }
+.app.theme-dark .product-detail-add-button { background: #c790ed; color: #21132b; }
+.app.theme-dark .product-detail-add-button svg { color: #21132b; }
+
+@media (prefers-reduced-motion: reduce) {
+  .storefront-theme-button,
+  .storefront-theme-button svg { transition: none; }
+}
