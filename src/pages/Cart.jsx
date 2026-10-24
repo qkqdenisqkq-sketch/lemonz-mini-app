@@ -4,6 +4,12 @@ export default function Cart({
     cart,
     cartCount,
     cartTotal,
+    cartDiscount,
+    cartFinalTotal,
+    appliedPromo,
+    onApplyPromo,
+    onRemovePromo,
+    demoPromoHint,
     onOpenCatalog,
     onIncrease,
     onDecrease,
@@ -13,6 +19,23 @@ export default function Cart({
 }) {
     const [comment, setComment] =
         useState("");
+    const [promoInput, setPromoInput] = useState("");
+    const [promoError, setPromoError] = useState("");
+    const [checkingPromo, setCheckingPromo] = useState(false);
+
+    const handlePromo = async (event) => {
+        event.preventDefault();
+        if (checkingPromo) return;
+        setCheckingPromo(true);
+        setPromoError("");
+        try {
+            await onApplyPromo(promoInput);
+        } catch (error) {
+            setPromoError(error?.message || "Не удалось применить промокод");
+        } finally {
+            setCheckingPromo(false);
+        }
+    };
 
     const handleCheckout = () => {
         onCheckout(comment.trim());
@@ -196,6 +219,47 @@ export default function Cart({
                         </small>
                     </label>
 
+                    <section className="cart-promo" aria-label="Промокод">
+                        <div className="cart-promo-heading">
+                            <span className="cart-promo-icon" aria-hidden="true">%</span>
+                            <div>
+                                <h2>Есть промокод?</h2>
+                                <p>Примени его и получи скидку на заказ</p>
+                            </div>
+                        </div>
+
+                        {appliedPromo ? (
+                            <div className="cart-promo-applied" role="status">
+                                <div>
+                                    <strong>✓ {appliedPromo.code}</strong>
+                                    <span>{appliedPromo.label}</span>
+                                </div>
+                                <button type="button" onClick={() => { onRemovePromo(); setPromoInput(""); setPromoError(""); }}>
+                                    Убрать
+                                </button>
+                            </div>
+                        ) : (
+                            <form className="cart-promo-form" onSubmit={handlePromo}>
+                                <input
+                                    type="text"
+                                    value={promoInput}
+                                    onChange={(event) => { setPromoInput(event.target.value.toUpperCase()); setPromoError(""); }}
+                                    placeholder="Введи промокод"
+                                    aria-label="Промокод"
+                                    maxLength={32}
+                                    autoComplete="off"
+                                    spellCheck={false}
+                                    disabled={checkingPromo}
+                                />
+                                <button type="submit" disabled={checkingPromo || !promoInput.trim()}>
+                                    {checkingPromo ? "Проверяем..." : "Применить"}
+                                </button>
+                            </form>
+                        )}
+                        {promoError && <p className="cart-promo-error" role="alert">{promoError}</p>}
+                        {demoPromoHint && !appliedPromo && <small className="cart-promo-hint">Демо-код для проверки дизайна: {demoPromoHint}</small>}
+                    </section>
+
                     <div className="cart-summary">
                         <div className="summary-row">
                             <span>
@@ -207,14 +271,24 @@ export default function Cart({
                             </span>
                         </div>
 
-                        <div className="summary-row total-row">
+                        <div className="summary-row cart-price-before">
+                            <span>Сумма товаров</span>
+                            <span>{Number(cartTotal).toLocaleString("ru-RU")} ₽</span>
+                        </div>
+
+                        {cartDiscount > 0 && <div className="summary-row cart-price-discount" aria-live="polite">
+                            <span>Скидка по промокоду</span>
+                            <strong>−{Number(cartDiscount).toLocaleString("ru-RU")} ₽</strong>
+                        </div>}
+
+                        <div className="summary-row total-row" aria-live="polite">
                             <span>
                                 Итого
                             </span>
 
                             <strong>
                                 {Number(
-                                    cartTotal
+                                    cartFinalTotal
                                 ).toLocaleString(
                                     "ru-RU"
                                 )}{" "}

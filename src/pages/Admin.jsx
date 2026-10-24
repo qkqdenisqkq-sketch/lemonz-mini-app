@@ -10,11 +10,13 @@ import {
 } from "../data/products";
 import Voting from "./Voting";
 import Auctions from "./Auctions";
+import PromoAdmin from "./PromoAdmin";
 
 const ADMIN_SECTIONS = [
     { id: "products", label: "Фигурки", icon: "✦" },
     { id: "voting", label: "Голосование", icon: "◈" },
     { id: "auctions", label: "Аукцион", icon: "◇" },
+    { id: "promos", label: "Промокоды", icon: "%" },
 ];
 
 function AdminSectionTabs({ active, onChange }) {
@@ -190,6 +192,9 @@ export default function Admin({
     isAdmin,
     showMessage,
     haptic,
+    demoPromos,
+    setDemoPromos,
+    onPromoMutation,
 }) {
     const [activeSection, setActiveSection] = useState("products");
     const [
@@ -510,7 +515,9 @@ export default function Admin({
             <AdminSectionTabs active={activeSection} onChange={setActiveSection} />
             {activeSection === "voting"
                 ? <Voting user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />
-                : <Auctions user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />}
+                : activeSection === "auctions"
+                    ? <Auctions user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />
+                    : <PromoAdmin demoPromos={demoPromos} setDemoPromos={setDemoPromos} onPromosChanged={onPromoMutation} />}
         </section>;
     }
 

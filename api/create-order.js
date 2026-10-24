@@ -1,3 +1,7 @@
+import { HttpError } from "./_shared.js";
+import { resolvePromo, validateOrderItems } from "./_promos.js";
+import { cartPricing } from "../src/lib/cartPricing.js";
+
 function escapeHtml(value = "") {
     return String(value)
         .replaceAll("&", "&amp;")
@@ -106,6 +110,13 @@ function createOrderMessage(order) {
         "<b>Состав заказа</b>",
         itemsText,
         "",
+        `<b>Стоимость товаров: ${formatPrice(order.subtotal)} ₽</b>`,
+        ...(order.promo ? [
+            `Промокод: <code>${escapeHtml(order.promo.code)}</code>`,
+            `${escapeHtml(order.promo.label)}`,
+            `Скидка: −${formatPrice(order.discount)} ₽`,
+        ] : []),
+        "",
         "<b>Комментарий к заказу</b>",
         comment
             ? escapeHtml(comment)
@@ -179,6 +190,21 @@ export default async function handler(
                 });
         }
 
+        const items = validateOrderItems(order.items);
+        const promo = order.promoCode ? await resolvePromo(request, order.promoCode, items) : null;
+        const pricing = cartPricing(items, promo);
+        if (Number(order.total) !== pricing.total) {
+            throw new HttpError(409, "Стоимость заказа изменилась. Перепроверь корзину и промокод.");
+        }
+        const confirmedOrder = {
+            ...order,
+            items,
+            promo,
+            subtotal: pricing.subtotal,
+            discount: pricing.discount,
+            total: pricing.total,
+        };
+
         const telegramResponse =
             await fetch(
                 `https://api.telegram.org/bot${botToken}/sendMessage`,
@@ -195,7 +221,7 @@ export default async function handler(
                                     ordersChatId,
                                 text:
                                     createOrderMessage(
-                                        order
+                                    confirmedOrder
                                     ),
                                 parse_mode:
                                     "HTML",
@@ -236,6 +262,9 @@ export default async function handler(
                     order.orderNumber,
             });
     } catch (error) {
+        if (error instanceof HttpError) {
+            return response.status(error.status).json({ ok: false, error: error.message });
+        }
         console.error(
             "Order error:",
             error

@@ -1,6 +1,6 @@
 .admin-workspace-tabs {
   display: grid;
-  grid-template-columns: repeat(3,minmax(0,1fr));
+  grid-template-columns: repeat(4,minmax(0,1fr));
   gap: 6px;
   margin: 2px 0 19px;
   padding: 5px;
@@ -20,7 +20,7 @@
   border-radius: 12px;
   color: #675573;
   background: transparent;
-  font-size: clamp(10px,2.8vw,13px);
+  font-size: clamp(9px,2.55vw,12px);
   font-weight: 850;
   white-space: nowrap;
   cursor: pointer;
@@ -82,6 +82,24 @@
 .admin-upload-label input { position: absolute; width: 1px !important; height: 1px !important; opacity: 0; overflow: hidden; pointer-events: none; }
 .admin-upload-label:has(input:disabled) { opacity: .5; cursor: default; }
 
+/* Live season editing and scheduling. */
+.admin-season-editor { margin-top: 0; margin-bottom: 15px; }
+.admin-season-presets { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); gap: 6px; }
+.engagement-admin .admin-season-presets button { min-width: 0; min-height: 39px; padding: 7px 2px; font-size: clamp(10px,2.6vw,12px); border: 1px solid #ddc9ed; background: #f5e9fe; }
+.admin-season-date-fields { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; margin-top: 4px; }
+.admin-season-date-fields label { display: flex; flex-direction: column; gap: 5px; min-width: 0; font-size: 11px; color: #6d587c; font-weight: 850; }
+.app .admin-season-date-fields input[type="datetime-local"] { display: block; width: 100%; min-width: 0; min-height: 43px; padding: 9px 7px; border-radius: 10px; font-size: 11px; }
+.admin-season-hint { color: #796987; font-size: 11px; line-height: 1.5; }
+.admin-season-editor > .engagement-primary { color: #fff; background: #24192d; }
+.admin-candidate-edit-modal { gap: 12px; }
+.admin-candidate-preview { display: flex; justify-content: center; padding: 4px; }
+.admin-candidate-preview .figure-art { width: 110px; height: 112px; }
+.admin-candidate-vote-notice { padding: 10px 12px; border: 1px solid #dbc8ed; border-radius: 12px; color: #653e80; background: #f4e8ff; font-size: 12px; line-height: 1.5; }
+.admin-candidate-edit-modal .upload-label { color: #70419c; }
+.admin-choice-editor .admin-compact-row { border-bottom-color: #e9def0; }
+.admin-choice-editor .admin-compact-row:last-child { border-bottom: 0; }
+.admin-choice-editor .admin-compact-row > .figure-art { height: 88px; }
+
 .app.theme-dark .admin-workspace-tabs { background: #34273f; border-color: #5f4970; }
 .app.theme-dark .admin-workspace-tabs button { color: #e1d1eb; }
 .app.theme-dark .admin-workspace-tabs button.active { color: #25142c; background: #c999ec; }
@@ -112,6 +130,17 @@
 .app.theme-dark .admin-choice-fields label:not(.admin-upload-label) { color: #dac6e8; }
 .app.theme-dark .admin-upload-label { color: #f5e5ff; background: #56396d; border-color: #8c64a7; }
 .app.theme-dark .admin-choice-editor > .engagement-primary { color: #24142d; background: #d3a0f4; }
+.app.theme-dark .admin-season-editor > .engagement-primary { color: #24142d; background: #d3a0f4; }
+.app.theme-dark .engagement-admin .admin-season-presets button { color: #ebd2f7; background: #49315a; border-color: #745587; }
+.app.theme-dark .admin-season-date-fields label,
+.app.theme-dark .admin-season-hint { color: #dbcae9; }
+.app.theme-dark .admin-candidate-vote-notice { color: #e7d3f4; background: #3f2c52; border-color: #75578f; }
+.app.theme-dark .admin-candidate-edit-modal .upload-label { color: #e4c9f6; }
+
+@media(max-width:400px) {
+  .admin-season-date-fields { grid-template-columns: 1fr; }
+  .app .admin-season-date-fields input[type="datetime-local"] { font-size: 13px; }
+}
 
 @media(max-width:355px) {
   .admin-choice-card { grid-template-columns: 76px minmax(0,1fr); gap: 8px; padding: 8px; }

@@ -1,0 +1,77 @@
+.promo-admin-page { display: flex; flex-direction: column; gap: 15px; padding-bottom: 30px; color: #281b32; }
+.promo-admin-intro { padding: 2px 2px 4px; }
+.promo-admin-intro > span { color: #9151c8; font-size: 10px; font-weight: 900; letter-spacing: .13em; }
+.promo-admin-intro h2 { margin: 6px 0 7px; font-size: clamp(23px,6vw,30px); font-weight: 950; letter-spacing: -.045em; }
+.promo-admin-intro p { max-width: 420px; margin: 0; color: #776784; font-size: 12px; line-height: 1.55; }
+.promo-admin-stats { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 9px; }
+.promo-admin-stats > div { display: flex; flex-direction: column; gap: 6px; padding: 17px; background: #efe3fa; border: 1px solid #decced; border-radius: 16px; }
+.promo-admin-stats small { color: #755c87; font-weight: 700; font-size: 11px; }
+.promo-admin-stats strong { color: #542874; font-size: 27px; font-weight: 950; }
+.promo-admin-form,.promo-admin-list { border: 1px solid #e5d8ed; border-radius: 19px; padding: 17px; background: #fff; min-width: 0; }
+.promo-admin-section-heading { display: flex; align-items: center; gap: 12px; justify-content: space-between; margin-bottom: 15px; }
+.promo-admin-section-heading h3 { font-size: 16px; margin: 0; font-weight: 900; overflow-wrap: anywhere; }
+.promo-admin-section-heading span { display: grid; place-items: center; min-width: 29px; height: 29px; padding: 0 8px; flex: none; border-radius: 99px; background: #efddfa; color: #71379e; font-size: 12px; font-weight: 900; }
+.promo-admin-fields { display: grid; grid-template-columns: minmax(0,1fr) 103px; gap: 10px; }
+.promo-admin-fields label { display: flex; flex-direction: column; min-width: 0; gap: 6px; color: #6a547a; font-size: 11px; font-weight: 850; }
+.app .promo-admin-fields input { width: 100%; height: 44px; min-width: 0; padding: 0 12px; border: 1px solid #e1d2eb; border-radius: 11px; background: #faf6fe; color: #25132f; font-size: 13px; font-weight: 750; }
+.app .promo-admin-fields input::placeholder { color: #94849f; font-size: 11px; font-weight: 500; }
+.promo-admin-form-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+.promo-admin-form-buttons button { min-height: 42px; padding: 10px 15px; border: 0; border-radius: 11px; background: #261b2e; color: #fff; cursor: pointer; font-size: 12px; font-weight: 850; }
+.promo-admin-form-buttons button.secondary { color: #6d4686; background: #eee0f8; }
+.promo-admin-form-buttons button:disabled { opacity: .5; cursor: default; }
+.promo-admin-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid #eee5f3; min-width: 0; }
+.promo-admin-row:last-child { border-bottom: 0; padding-bottom: 0; }
+.promo-admin-row-copy { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.promo-admin-row-copy strong { font-size: 14px; font-weight: 900; color: #32203c; overflow-wrap: anywhere; }
+.promo-admin-row-copy span { color: #796989; font-size: 10px; line-height: 1.45; }
+.promo-admin-row-actions { display: flex; flex-wrap: wrap; flex: 0 0 auto; justify-content: flex-end; gap: 5px; }
+.promo-admin-row-actions button { min-height: 31px; padding: 7px 9px; border-radius: 9px; border: 1px solid #daccf1; background: #efe4f9; color: #6c379c; font-size: 10px; font-weight: 800; cursor: pointer; }
+.promo-admin-row-actions button.danger { color: #b13c55; background: #fff0f3; border-color: #f0ccd5; }
+.promo-admin-row-actions button.restore { color: #347a54; background: #e7f7ed; border-color: #c9e5d4; }
+.promo-admin-row-actions button:disabled { opacity: .5; cursor: default; }
+.promo-admin-empty,.promo-admin-note { margin: 0; color: #776885; font-size: 12px; line-height: 1.55; }
+.promo-admin-note { margin: -4px 0 12px; }
+.promo-admin-reward { display: flex; flex-direction: column; gap: 4px; padding: 11px 0; border-bottom: 1px solid #eee5f3; }
+.promo-admin-reward:last-child { border: 0; }
+.promo-admin-reward strong { color: #3f2451; font-size: 13px; overflow-wrap: anywhere; }
+.promo-admin-reward span { color: #6c5a7c; font-size: 11px; line-height: 1.4; }
+.promo-admin-reward small { color: #437b58; font-weight: 850; font-size: 10px; }
+.promo-admin-warning,.promo-admin-success,.promo-admin-error,.promo-admin-loading { padding: 12px 13px; border: 1px solid #dac5ec; border-radius: 12px; background: #f5edfc; color: #624479; font-size: 12px; line-height: 1.55; overflow-wrap: anywhere; }
+.promo-admin-error { color: #a73448; background: #fff0f2; border-color: #f0cbd4; }
+.promo-admin-success { color: #246f45; background: #e9f9ee; border-color: #bfe5ca; }
+.promo-admin-warning p { margin-bottom: 0; }
+
+.app.theme-dark .promo-admin-page { color: #f4e8fc; }
+.app.theme-dark .promo-admin-intro > span { color: #d1a1f7; }
+.app.theme-dark .promo-admin-intro p,.app.theme-dark .promo-admin-empty,.app.theme-dark .promo-admin-note { color: #c5b1d4; }
+.app.theme-dark .promo-admin-stats > div { background: #3a2a49; border-color: #5d4970; }
+.app.theme-dark .promo-admin-stats small { color: #dbc9e9; }
+.app.theme-dark .promo-admin-stats strong { color: #f0cfff; }
+.app.theme-dark .promo-admin-form,.app.theme-dark .promo-admin-list { background: #261d30; border-color: #4e3c5a; }
+.app.theme-dark .promo-admin-section-heading span { background: #4a345c; color: #eccaff; }
+.app.theme-dark .promo-admin-fields label { color: #d5bfe5; }
+.app.theme-dark .promo-admin-fields input { background: #372944; border-color: #654e77; color: #f6ebfc; }
+.app.theme-dark .promo-admin-fields input::placeholder { color: #c3afd1; }
+.app.theme-dark .promo-admin-form-buttons button { background: #ce9af3; color: #22132b; }
+.app.theme-dark .promo-admin-form-buttons button.secondary { background: #473258; color: #efddf9; }
+.app.theme-dark .promo-admin-row { border-color: #4b3b56; }
+.app.theme-dark .promo-admin-row-copy strong,.app.theme-dark .promo-admin-reward strong { color: #f5e9fe; }
+.app.theme-dark .promo-admin-row-copy span,.app.theme-dark .promo-admin-reward span { color: #c4b0d2; }
+.app.theme-dark .promo-admin-row-actions button { background: #4a345c; border-color: #76568a; color: #efd6ff; }
+.app.theme-dark .promo-admin-row-actions button.danger { background: #563247; border-color: #81485e; color: #ffc0d0; }
+.app.theme-dark .promo-admin-row-actions button.restore { background: #284a3c; border-color: #447760; color: #b9f1cf; }
+.app.theme-dark .promo-admin-reward { border-color: #4b3b56; }
+.app.theme-dark .promo-admin-reward small { color: #a2e5bb; }
+.app.theme-dark .promo-admin-warning,.app.theme-dark .promo-admin-loading { background: #40314f; border-color: #765e88; color: #ead5f8; }
+.app.theme-dark .promo-admin-error { background: #512a3b; border-color: #8d4d67; color: #ffbac9; }
+.app.theme-dark .promo-admin-success { background: #244634; border-color: #3b7555; color: #b7efc9; }
+
+@media(max-width:380px) {
+    .admin-workspace-tabs { gap: 3px; padding: 4px; }
+    .admin-workspace-tabs button { gap: 2px; padding-inline: 2px; }
+    .admin-workspace-tabs button span { display: none; }
+    .promo-admin-row { align-items: flex-start; flex-direction: column; }
+    .promo-admin-row-actions { width: 100%; justify-content: flex-start; }
+    .promo-admin-fields { grid-template-columns: minmax(0,1fr) 83px; gap: 7px; }
+    .promo-admin-form,.promo-admin-list { padding: 13px; }
+}

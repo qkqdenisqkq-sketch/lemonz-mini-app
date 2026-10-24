@@ -39,7 +39,7 @@ export const SAMPLE_SEASON = {
         { id: "p4", category: "community", name: "Jinx", universe: "Arcane", author_username: "mio_art", votes: 125, comments: 12, previewCrop: [55, 1140] },
         { id: "p5", category: "community", name: "Gojo", universe: "Jujutsu Kaisen", author_username: "satoru", votes: 84, comments: 7, previewCrop: [55, 1291] },
         { id: "p6", category: "community", name: "Stitch", universe: "Lilo & Stitch", author_username: "bluecat", votes: 29, comments: 4, previewCrop: [55, 1438] },
-    ], myVotes: { lemonz: "p1" }, winners: [],
+    ], myVotes: {}, winners: [],
 };
 
 export const SAMPLE_LOTS = [

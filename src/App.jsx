@@ -28,6 +28,7 @@ import {
 import {
     useTelegram,
 } from "./hooks/useTelegram";
+import { cartPricing } from "./lib/cartPricing";
 
 import "./styles/app.css";
 import "./styles/lemonz-light.css";
@@ -38,6 +39,8 @@ import "./styles/product-detail.css";
 import "./styles/theme.css";
 import "./styles/admin-workspace.css";
 import "./styles/voting-reference.css";
+import "./styles/cart-promo.css";
+import "./styles/admin-promos.css";
 
 function App() {
     const [activePage, setActivePage] =
@@ -64,6 +67,11 @@ function App() {
             "lemonz-cart",
             []
         );
+
+    const [appliedPromo, setAppliedPromo] = useState(null);
+    const [demoPromos, setDemoPromos] = useLocalStorage("lemonz-preview-promos-v1", [
+        { code: "LEMONZ10", percent: 10, active: true },
+    ]);
 
     const [
         favoriteProductIds,
@@ -155,6 +163,44 @@ function App() {
         );
     }, [cart]);
 
+    const activePromo = cart.length && (appliedPromo?.scope !== "figure" || cart.some((item) => String(item.cartId) === String(appliedPromo.eligibleCartId))) ? appliedPromo : null;
+    const cartPrices = useMemo(() => cartPricing(cart, activePromo), [cart, activePromo]);
+
+    const applyPromo = async (rawCode) => {
+        const code = String(rawCode || "").trim().toUpperCase();
+        if (!code) throw new Error("Введи промокод");
+
+        const applyDemoCode = () => {
+            const preview = demoPromos.find((item) => item.code === code && item.active);
+            if (!preview) throw new Error("Промокод не найден. Добавить пробный код можно в разделе «Админ» → «Промокоды».");
+            const demo = { code, scope: "order", percent: preview.percent, label: `Демо: скидка ${preview.percent}%`, demo: true };
+            setAppliedPromo(demo);
+            return demo;
+        };
+
+        if (import.meta.env.DEV && !window.Telegram?.WebApp?.initData) {
+            return applyDemoCode();
+        }
+
+        const response = await fetch("/api/promo-code", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-telegram-init-data": window.Telegram?.WebApp?.initData || "",
+            },
+            body: JSON.stringify({ code, items: cart }),
+        });
+
+        if (import.meta.env.DEV && response.headers.get("content-type")?.includes("text/html")) {
+            return applyDemoCode();
+        }
+
+        const result = await response.json().catch(() => null);
+        if (!response.ok || !result?.ok) throw new Error(result?.error || "Не удалось проверить промокод");
+        setAppliedPromo(result.promo);
+        return result.promo;
+    };
+
     useEffect(() => {
         const handleScroll = () => {
             setShowScrollTop(
@@ -239,6 +285,7 @@ function App() {
         nickname,
         unitPrice,
     }) => {
+        if (!cart.length) setAppliedPromo(null);
         const configurationKey =
             JSON.stringify({
                 productId:
@@ -337,46 +384,20 @@ function App() {
         cartId
     ) => {
         haptic();
-
-        setCart(
-            (currentCart) =>
-                currentCart
-                    .map(
-                        (item) =>
-                            item.cartId ===
-                            cartId
-                                ? {
-                                      ...item,
-                                      quantity:
-                                          Number(
-                                              item.quantity ??
-                                                  0
-                                          ) -
-                                          1,
-                                  }
-                                : item
-                    )
-                    .filter(
-                        (item) =>
-                            item.quantity >
-                            0
-                    )
-        );
+        const updated = cart.map((item) => item.cartId === cartId
+            ? { ...item, quantity: Number(item.quantity ?? 0) - 1 }
+            : item).filter((item) => item.quantity > 0);
+        setCart(updated);
+        if (!updated.length || (appliedPromo?.scope === "figure" && !updated.some((item) => String(item.cartId) === String(appliedPromo.eligibleCartId)))) setAppliedPromo(null);
     };
 
     const removeFromCart = (
         cartId
     ) => {
         haptic("warning");
-
-        setCart(
-            (currentCart) =>
-                currentCart.filter(
-                    (item) =>
-                        item.cartId !==
-                        cartId
-                )
-        );
+        const updated = cart.filter((item) => item.cartId !== cartId);
+        setCart(updated);
+        if (!updated.length || String(appliedPromo?.eligibleCartId) === String(cartId)) setAppliedPromo(null);
     };
 
     const clearCart = () => {
@@ -397,11 +418,16 @@ function App() {
 
         haptic("warning");
         setCart([]);
+        setAppliedPromo(null);
     };
 
 const checkout = async (comment = "") => {
     if (cart.length === 0) {
         showMessage("Корзина пуста");
+        return;
+    }
+    if (activePromo?.demo) {
+        showMessage("Демо-промокод показывает скидку только для проверки интерфейса. Для реального заказа нужен промокод, настроенный на сервере.");
         return;
     }
 
@@ -423,6 +449,7 @@ const checkout = async (comment = "") => {
         },
 
         items: cart.map((item) => ({
+            cartId: item.cartId,
             productId: item.productId,
             name: item.name,
             category: item.category,
@@ -446,8 +473,9 @@ const checkout = async (comment = "") => {
 
         total:
             Number(
-                cartTotal
+                cartPrices.total
             ),
+        promoCode: activePromo?.code || "",
     };
 
     try {
@@ -508,6 +536,7 @@ const checkout = async (comment = "") => {
         );
 
         setCart([]);
+        setAppliedPromo(null);
     } catch (error) {
         console.error(
             "Ошибка отправки заказа:",
@@ -726,6 +755,12 @@ const checkout = async (comment = "") => {
                         cartTotal={
                             cartTotal
                         }
+                        cartDiscount={cartPrices.discount}
+                        cartFinalTotal={cartPrices.total}
+                        appliedPromo={activePromo}
+                        onApplyPromo={applyPromo}
+                        onRemovePromo={() => setAppliedPromo(null)}
+                        demoPromoHint={import.meta.env.DEV ? demoPromos.find((item) => item.active)?.code : null}
                         onOpenCatalog={() =>
                             navigate(
                                 "Каталог"
@@ -786,6 +821,9 @@ const checkout = async (comment = "") => {
                             isAdmin={isAdmin}
                             showMessage={showMessage}
                             haptic={haptic}
+                            demoPromos={demoPromos}
+                            setDemoPromos={setDemoPromos}
+                            onPromoMutation={() => setAppliedPromo(null)}
                             products={
                                 products
                             }

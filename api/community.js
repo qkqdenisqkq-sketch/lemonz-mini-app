@@ -9,6 +9,25 @@ async function getWinners() {
     return db("season_winners?select=id,season_number,name,universe,category,author_username,created_at&order=created_at.desc&limit=50");
 }
 
+function assertOpenSeason(season) {
+    if (!season) throw new HttpError(409, "Нет активного сезона");
+    if (new Date(season.starts_at).getTime() > Date.now()) throw new HttpError(409, "Голосование ещё не началось");
+    if (new Date(season.ends_at).getTime() <= Date.now()) throw new HttpError(409, "Сезон уже завершён");
+}
+
+async function validateEditedName(seasonId, name, excludeId = null) {
+    const key = canonical(name);
+    if (key.length < 2) throw new HttpError(400, "Некорректное имя персонажа");
+    const [candidates, winners] = await Promise.all([
+        db(`candidates?season_id=eq.${seasonId}&select=id,normalized_key,name`),
+        db("season_winners?select=normalized_key,name"),
+    ]);
+    const duplicate = [...candidates.filter((item) => item.id !== excludeId), ...winners]
+        .find((item) => similar(key, item.normalized_key));
+    if (duplicate) throw new HttpError(409, `Персонаж «${duplicate.name}» уже участвует или побеждал ранее`);
+    return key;
+}
+
 async function getState(user) {
     const active = await getActiveSeason();
     const winners = await getWinners();
@@ -30,7 +49,7 @@ async function getState(user) {
 
 async function suggest(body, user) {
     const season = await getActiveSeason();
-    if (!season || new Date(season.ends_at).getTime() <= Date.now()) throw new HttpError(409, "Сезон завершён. Дождись нового.");
+    assertOpenSeason(season);
     const name = clean(body.name, 80); const universe = clean(body.universe, 80);
     if (name.length < 2 || universe.length < 2) throw new HttpError(400, "Укажи персонажа и вселенную");
     const normalized_key = canonical(name);
@@ -63,6 +82,7 @@ export default async function handler(request, response) {
         const season = await getActiveSeason();
         switch (body.operation) {
             case "vote": {
+                assertOpenSeason(season);
                 const category = clean(body.category, 20);
                 if (!["lemonz", "community"].includes(category)) throw new HttpError(400, "Некорректная категория");
                 const candidateId = body.candidateId === null ? null : Number(body.candidateId);
@@ -72,7 +92,7 @@ export default async function handler(request, response) {
             }
             case "suggest": await suggest(body, user); break;
             case "comment": {
-                if (!season || new Date(season.ends_at).getTime() <= Date.now()) throw new HttpError(409, "Сезон завершён");
+                assertOpenSeason(season);
                 const candidateId = Number(body.candidateId);
                 const candidate = await db(`candidates?id=eq.${candidateId}&season_id=eq.${season.id}&removed=eq.false&select=id`);
                 if (!candidate.length) throw new HttpError(404, "Персонаж не найден");
@@ -83,7 +103,65 @@ export default async function handler(request, response) {
             }
             case "admin_delete_candidate": {
                 adminOnly(user);
-                await db(`candidates?id=eq.${Number(body.candidateId)}&category=eq.community`, { method: "PATCH", body: { removed: true }, prefer: "return=minimal" });
+                if (!season) throw new HttpError(409, "Нет активного сезона");
+                const candidateId = Number(body.candidateId);
+                if (!Number.isSafeInteger(candidateId) || candidateId < 1) throw new HttpError(400, "Некорректный персонаж");
+                // Both votes and comments are removed atomically by ON DELETE CASCADE.
+                const deleted = await db(`candidates?id=eq.${candidateId}&season_id=eq.${season.id}`, { method: "DELETE", prefer: "return=representation" });
+                if (!deleted.length) throw new HttpError(404, "Персонаж уже удалён или не относится к этому сезону");
+                break;
+            }
+            case "admin_update_candidate": {
+                adminOnly(user);
+                if (!season) throw new HttpError(409, "Нет активного сезона");
+                const candidateId = Number(body.candidateId);
+                if (!Number.isSafeInteger(candidateId) || candidateId < 1) throw new HttpError(400, "Некорректный персонаж");
+                const current = await db(`candidates?id=eq.${candidateId}&season_id=eq.${season.id}&removed=eq.false&select=id,name,normalized_key`);
+                if (!current.length) throw new HttpError(404, "Персонаж не найден в этом сезоне");
+                const name = clean(body.name, 80); const universe = clean(body.universe, 80);
+                if (name.length < 2 || universe.length < 2) throw new HttpError(400, "Заполни имя персонажа и вселенную");
+                const key = canonical(name);
+                if (key !== current[0].normalized_key) await validateEditedName(season.id, name, candidateId);
+                const updated = await db(`candidates?id=eq.${candidateId}&season_id=eq.${season.id}&removed=eq.false`, {
+                    method: "PATCH",
+                    body: { name, universe, image_url: validMedia(body.image_url), description: clean(body.description, 600), normalized_key: key },
+                    prefer: "return=representation",
+                });
+                if (!updated.length) throw new HttpError(404, "Не удалось обновить персонажа");
+                break;
+            }
+            case "admin_add_candidate": {
+                adminOnly(user);
+                if (!season) throw new HttpError(409, "Нет активного сезона");
+                const category = clean(body.category, 20);
+                if (category !== "lemonz") throw new HttpError(400, "Администратор может добавить только вариант LEMONZ");
+                const existing = await db(`candidates?season_id=eq.${season.id}&category=eq.lemonz&removed=eq.false&select=id`);
+                if (existing.length >= 3) throw new HttpError(409, "В категории LEMONZ уже три персонажа");
+                const name = clean(body.name, 80); const universe = clean(body.universe, 80);
+                if (name.length < 2 || universe.length < 2) throw new HttpError(400, "Заполни имя персонажа и вселенную");
+                const key = await validateEditedName(season.id, name);
+                await db("candidates", {
+                    method: "POST",
+                    body: { season_id: season.id, category, name, universe, image_url: validMedia(body.image_url), description: clean(body.description, 600), normalized_key: key },
+                    prefer: "return=minimal",
+                });
+                break;
+            }
+            case "admin_set_season_dates": {
+                adminOnly(user);
+                if (!season) throw new HttpError(409, "Нет активного сезона");
+                const start = new Date(body.startsAt).getTime();
+                const end = new Date(body.endsAt).getTime();
+                if (!Number.isFinite(start) || !Number.isFinite(end)) throw new HttpError(400, "Укажи начало и окончание голосования");
+                if (end <= Date.now() + 60000) throw new HttpError(400, "Окончание должно быть минимум через минуту");
+                const duration = end - start;
+                if (duration < 15 * 60000 || duration > 90 * 86400000) throw new HttpError(400, "Выбери период от 15 минут до 90 дней");
+                const updated = await db(`seasons?id=eq.${season.id}&status=eq.active`, {
+                    method: "PATCH",
+                    body: { starts_at: new Date(start).toISOString(), ends_at: new Date(end).toISOString() },
+                    prefer: "return=representation",
+                });
+                if (!updated.length) throw new HttpError(409, "Сезон уже изменён. Обнови страницу");
                 break;
             }
             case "admin_delete_comment": {
