@@ -20,6 +20,7 @@ export default function LemonzIcon({ name, size = 24, strokeWidth = 1.9 }) {
         case "back": return <svg {...common}><path d="m13 4-8 8 8 8M5 12h16"/></svg>;
         case "chevron-left": return <svg {...common}><path d="m15 5-7 7 7 7"/></svg>;
         case "chevron-right": return <svg {...common}><path d="m9 5 7 7-7 7"/></svg>;
+        case "chevron-down": return <svg {...common}><path d="m5 9 7 7 7-7"/></svg>;
         case "diamond": return <svg {...common}><path d="M4 4h16l3 6-11 11L1 10l3-6ZM1 10h22M8 4l4 17 4-17"/></svg>;
         case "clock": return <svg {...common}><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/></svg>;
         case "trending-up": return <svg {...common}><path d="m3 18 7-7 4 4 7-8M15 7h6v6"/></svg>;

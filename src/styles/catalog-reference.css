@@ -1,0 +1,138 @@
+/* Product catalog: three-column cards and independent universe subcategories. */
+.catalog-reference-page {
+  min-width: 0;
+  padding: 16px 13px 38px;
+  background: #fcf9ff;
+  color: #1a1322;
+}
+.catalog-reference-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 13px;
+}
+.catalog-reference-title-row h1 {
+  margin: 0;
+  font-size: clamp(26px, 7vw, 34px);
+  font-weight: 950;
+  letter-spacing: -.045em;
+}
+.catalog-reference-sort-wrap { position: relative; min-width: 0; width: min(52%, 201px); flex: none; }
+.catalog-reference-sort-wrap select {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: 40px;
+  padding: 9px 29px 9px 13px;
+  border: 1px solid #e8dcf4;
+  border-radius: 16px;
+  color: #281b31;
+  background: #faf7ff;
+  font-size: clamp(11px, 3vw, 13px);
+  cursor: pointer;
+}
+.catalog-reference-sort-wrap > svg { position: absolute; pointer-events: none; right: 11px; top: 50%; transform: translateY(-50%); color: #766285; }
+.catalog-reference-search { display: flex; align-items: center; gap: 9px; margin: 0 0 13px; padding: 0 10px; border: 1px solid #e6d9f2; border-radius: 15px; background: #fff; color: #8655b8; }
+.catalog-reference-search input { flex: 1; min-width: 0; height: 41px; border: 0 !important; background: transparent !important; outline: 0; font-size: 13px; }
+.catalog-reference-search button { flex: none; border: 0; background: transparent; color: #765984; font-size: 22px; cursor: pointer; }
+.catalog-reference-category-tabs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  overflow-x: auto;
+  margin: 0 -13px 19px;
+  padding: 2px 13px 8px;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.catalog-reference-category-tabs::-webkit-scrollbar { display: none; }
+.catalog-reference-category-tabs > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  flex: none;
+  min-height: 38px;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #f1e9f9;
+  color: #24152c;
+  font-size: 12px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.catalog-reference-category-tabs > button.active { background: linear-gradient(105deg, #9951e2, #bd83f1); color: #fff; box-shadow: 0 3px 12px rgba(149, 71, 215, .19); }
+.catalog-reference-tab-icon { display: grid; place-items: center; width: 23px; height: 23px; flex: none; border-radius: 7px; color: #fff; font-size: 11px; font-weight: 950; }
+.catalog-reference-tab-icon.valorant { background: #ed5367; }
+.catalog-reference-tab-icon.dota { background: #bf3939; font-size: 9px; }
+.catalog-reference-tab-icon.anime { background: #ed62a9; }
+.catalog-reference-tab-icon.other { background: #f4b941; color: #311d00; }
+.catalog-reference-section { margin: 0 0 25px; min-width: 0; }
+.catalog-reference-section-heading { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+.catalog-reference-section-heading h2 { margin: 0; font-size: clamp(19px, 5.8vw, 27px); font-weight: 950; letter-spacing: -.035em; overflow-wrap: anywhere; }
+.catalog-reference-section-heading > span { color: #81728d; font-size: clamp(12px, 3.4vw, 15px); }
+.catalog-reference-subcategories { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 6px; margin-bottom: 11px; }
+.catalog-reference-subcategories button {
+  min-width: 0;
+  min-height: 36px;
+  padding: 7px 4px;
+  border: 1px solid #e5d6f1;
+  border-radius: 999px;
+  background: #f8f1fd;
+  color: #312139;
+  font-size: clamp(10px, 3.05vw, 13px);
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.catalog-reference-subcategories button.active { border-color: #b66ae7; color: #fff; background: linear-gradient(100deg, #9f59e1, #b876eb); box-shadow: 0 2px 7px rgba(150, 74, 219, .17); }
+.catalog-reference-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.catalog-reference-card { min-width: 0; padding: 5px; overflow: hidden; border: 1px solid #eee5f5; border-radius: 15px; background: #fff; box-shadow: 0 3px 13px rgba(82, 43, 121, .055); }
+.catalog-reference-photo { position: relative; width: 100%; border-radius: 11px; overflow: hidden; background: #e7c7f7; }
+.catalog-reference-photo-action { display: block; width: 100%; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.catalog-reference-photo .figure-art { width: 100%; height: auto; aspect-ratio: 3 / 4.2; border-radius: 0; background: linear-gradient(135deg, #edd7f9, #d4acec); }
+.catalog-reference-photo .figure-art img { object-fit: contain; }
+.catalog-reference-heart { position: absolute; top: 5px; right: 5px; display: grid; place-items: center; width: 31px; height: 31px; padding: 0; border: 0; border-radius: 50%; color: #8b44ca; background: #fff; box-shadow: 0 1px 5px rgba(49, 23, 76, .14); cursor: pointer; }
+.catalog-reference-heart.is-favorite { color: #a24fe0; background: #f6e8ff; }
+.catalog-reference-heart.is-favorite svg { fill: currentColor; }
+.catalog-reference-card-info { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 8px 3px 5px; }
+.catalog-reference-name { display: block; width: 100%; overflow: hidden; padding: 0; border: 0; background: transparent; color: #141018; font-size: clamp(12px, 3.5vw, 17px); line-height: 1.13; font-weight: 900; text-align: left; text-overflow: ellipsis; white-space: nowrap; cursor: pointer; }
+.catalog-reference-universe { overflow: hidden; color: #82738d; font-size: clamp(10px, 2.8vw, 12px); text-overflow: ellipsis; white-space: nowrap; }
+.catalog-reference-bottom { display: flex; align-items: flex-end; justify-content: space-between; gap: 2px; margin-top: 1px; }
+.catalog-reference-bottom strong { min-width: 0; color: #161018; font-size: clamp(12px, 3.65vw, 17px); font-weight: 950; letter-spacing: -.04em; white-space: nowrap; }
+.catalog-reference-bag { display: grid; place-items: center; flex: none; width: 28px; height: 29px; padding: 0; border: 0; border-radius: 10px; background: #f0e1fa; color: #8c37c3; cursor: pointer; }
+.catalog-reference-empty { padding: 25px 12px; border: 1px dashed #dfcdec; border-radius: 14px; background: #f9f3ff; color: #796a85; text-align: center; font-size: 12px; }
+.admin-product-subcategory { display: inline-block; margin-top: 4px; color: #79559b; font-size: 11px; font-weight: 750; }
+
+.app.theme-dark .catalog-reference-page { color: #f7effc; background: #17121e; }
+.app.theme-dark .catalog-reference-title-row h1,
+.app.theme-dark .catalog-reference-section-heading h2 { color: #fbf6ff; }
+.app.theme-dark .catalog-reference-sort-wrap select,
+.app.theme-dark .catalog-reference-search { color: #f7eefc; background: #2b2035; border-color: #514060; }
+.app.theme-dark .catalog-reference-sort-wrap > svg { color: #cbb4dd; }
+.app.theme-dark .catalog-reference-category-tabs > button { color: #eadcf3; background: #382947; }
+.app.theme-dark .catalog-reference-category-tabs > button.active { background: linear-gradient(105deg, #a566e0, #c28bec); color: #21112c; }
+.app.theme-dark .catalog-reference-section-heading > span { color: #c5b3d1; }
+.app.theme-dark .catalog-reference-subcategories button { color: #e9dcf2; background: #34263e; border-color: #584469; }
+.app.theme-dark .catalog-reference-subcategories button.active { color: #24122d; background: #d1a1f8; border-color: #bb83ec; }
+.app.theme-dark .catalog-reference-card { background: #281f31; border-color: #4d3b5c; box-shadow: none; }
+.app.theme-dark .catalog-reference-name,
+.app.theme-dark .catalog-reference-bottom strong { color: #f9f0ff; }
+.app.theme-dark .catalog-reference-universe { color: #c7b5d4; }
+.app.theme-dark .catalog-reference-heart { color: #f2d9ff; background: #402d51; }
+.app.theme-dark .catalog-reference-heart.is-favorite { color: #e2abff; background: #66447d; }
+.app.theme-dark .catalog-reference-bag { color: #f4d7ff; background: #543764; }
+.app.theme-dark .catalog-reference-empty { color: #d1bddf; background: #30263b; border-color: #5d496e; }
+.app.theme-dark .admin-product-subcategory { color: #d6b7ee; }
+
+@media (max-width: 360px) {
+  .catalog-reference-page { padding-inline: 10px; }
+  .catalog-reference-category-tabs { margin-inline: -10px; padding-inline: 10px; }
+  .catalog-reference-grid { gap: 6px; }
+  .catalog-reference-card { padding: 4px; border-radius: 12px; }
+  .catalog-reference-card-info { padding-inline: 2px; }
+  .catalog-reference-heart { width: 27px; height: 27px; }
+  .catalog-reference-bag { width: 25px; height: 27px; }
+  .catalog-reference-subcategories { gap: 4px; }
+}

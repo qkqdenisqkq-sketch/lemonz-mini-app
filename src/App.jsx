@@ -9,7 +9,7 @@ import BottomNav from "./components/BottomNav";
 import ProductDetail from "./components/ProductDetail";
 import ScrollTop from "./components/ScrollTop";
 
-import Home from "./pages/Home";
+import Catalog from "./pages/Catalog";
 import Storefront from "./pages/Storefront";
 import Voting from "./pages/Voting";
 import Auctions from "./pages/Auctions";
@@ -41,10 +41,13 @@ import "./styles/admin-workspace.css";
 import "./styles/voting-reference.css";
 import "./styles/cart-promo.css";
 import "./styles/admin-promos.css";
+import "./styles/catalog-reference.css";
 
 function App() {
     const [activePage, setActivePage] =
         useState("Главная");
+    const [catalogCategory, setCatalogCategory] = useState("Все");
+    const [catalogSearchOpen, setCatalogSearchOpen] = useState(false);
 
     const [auctionDetailOpen, setAuctionDetailOpen] = useState(false);
 
@@ -268,14 +271,15 @@ function App() {
 
         haptic();
 
+        if (page === "Каталог") {
+            setCatalogCategory("Все");
+            setCatalogSearchOpen(false);
+        }
+
         setActivePage(page);
 
         window.setTimeout(() => {
-            if (page === "Каталог") {
-                document.querySelector(".home-catalog")?.scrollIntoView({ behavior: "smooth" });
-            } else {
-                window.scrollTo({ top: 0, behavior: "smooth" });
-            }
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }, 0);
     };
 
@@ -682,7 +686,8 @@ const checkout = async (comment = "") => {
                 }
                 onSearch={() => {
                     navigate("Каталог");
-                    window.setTimeout(() => document.querySelector(".search-toggle-button")?.click(), 90);
+                    setCatalogSearchOpen(true);
+                    window.setTimeout(() => document.querySelector(".catalog-reference-search input")?.focus(), 90);
                 }}
                 onFavorites={() => navigate("Профиль")}
                 onCart={() => navigate("Корзина")}
@@ -701,38 +706,22 @@ const checkout = async (comment = "") => {
                         onNavigate={navigate}
                         onOpenCategory={(category) => {
                             navigate("Каталог");
-                            window.setTimeout(() => {
-                                const section = [...document.querySelectorAll(".category-section")].find((item) => item.querySelector(".category-heading h2")?.textContent?.trim() === category);
-                                section?.scrollIntoView({ behavior: "smooth", block: "start" });
-                            }, 140);
+                            setCatalogCategory(category);
                         }}
                     />
                 )}
 
                 {activePage === "Каталог" && (
-                    <div className="catalog-screen">
-                    <Home
-                        onNavigate={navigate}
-                        products={
-                            products
-                        }
-                        user={user}
-                        favoriteProductIds={
-                            favoriteProductIds
-                        }
-                        onToggleFavorite={
-                            toggleFavorite
-                        }
-                        onOpenCatalog={() =>
-                            navigate(
-                                "Каталог"
-                            )
-                        }
-                        onOpenProduct={
-                            setSelectedProduct
-                        }
+                    <Catalog
+                        products={products}
+                        activeCategory={catalogCategory}
+                        onCategoryChange={setCatalogCategory}
+                        favoriteProductIds={favoriteProductIds}
+                        onToggleFavorite={toggleFavorite}
+                        onOpenProduct={setSelectedProduct}
+                        searchOpen={catalogSearchOpen}
+                        onCloseSearch={() => setCatalogSearchOpen(false)}
                     />
-                    </div>
                 )}
 
                 {activePage === "Голосование" && (

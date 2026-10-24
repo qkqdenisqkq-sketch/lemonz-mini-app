@@ -116,7 +116,7 @@ export const DEFAULT_PRODUCTS = [
         popular: false,
         isNew: false,
     },
-];
+].map((product) => ({ subcategory: "Фигурки", ...product }));
 
 export const CUSTOM_OPTIONS = [
     {

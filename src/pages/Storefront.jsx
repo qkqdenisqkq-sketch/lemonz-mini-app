@@ -25,7 +25,7 @@ const HOME_CATEGORIES = [
     { name: "Dota 2", icon: CATEGORY_ICONS["Dota 2"], category: "Dota 2" },
     { name: "League of Legends", icon: CATEGORY_ICONS["League of Legends"], category: "League of Legends" },
     { name: "Anime", icon: CATEGORY_ICONS.Anime, category: "Anime" },
-    { name: "Другие", icon: CATEGORY_ICONS["Аксессуары"], category: "Аксессуары" },
+    { name: "Другие", icon: CATEGORY_ICONS["Аксессуары"], category: "Другие" },
 ];
 
 function ReferenceCrop({ region, className = "" }) {

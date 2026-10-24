@@ -8,6 +8,7 @@ import {
 import {
     DEFAULT_CATEGORIES,
 } from "../data/products";
+import { PRODUCT_SUBCATEGORIES, getProductSubcategory } from "../lib/catalog";
 import Voting from "./Voting";
 import Auctions from "./Auctions";
 import PromoAdmin from "./PromoAdmin";
@@ -37,6 +38,7 @@ const EMPTY_FORM = {
     category:
         DEFAULT_CATEGORIES[0] ??
         "Valorant",
+    subcategory: "Фигурки",
     price: 7000,
     image: "",
     popular: false,
@@ -361,6 +363,7 @@ export default function Admin({
             category:
                 product.category ??
                 DEFAULT_CATEGORIES[0],
+            subcategory: getProductSubcategory(product),
             price:
                 Number(
                     product.price ??
@@ -489,6 +492,7 @@ export default function Admin({
             id: form.id,
             name,
             category,
+            subcategory: getProductSubcategory(form),
             price,
             image:
                 form.image,
@@ -563,7 +567,7 @@ export default function Admin({
                             {form.id !==
                             null
                                 ? "Редактирование"
-                                : "Новая фигурка"}
+                                : "Новый товар"}
                         </h2>
                     </div>
 
@@ -641,6 +645,13 @@ export default function Admin({
                                 </option>
                             )
                         )}
+                    </select>
+                </label>
+
+                <label className="field">
+                    <span>Подкатегория</span>
+                    <select value={form.subcategory} onChange={(event) => updateField("subcategory", event.target.value)}>
+                        {PRODUCT_SUBCATEGORIES.map((subcategory) => <option key={subcategory} value={subcategory}>{subcategory}</option>)}
                     </select>
                 </label>
 
@@ -845,7 +856,7 @@ export default function Admin({
                     {form.id !==
                     null
                         ? "Сохранить изменения"
-                        : "Добавить фигурку"}
+                        : "Добавить товар"}
                 </button>
             </form>
 
@@ -979,6 +990,8 @@ export default function Admin({
                                                     product.name
                                                 }
                                             </h3>
+
+                                            <small className="admin-product-subcategory">{getProductSubcategory(product)}</small>
 
                                             <strong className="admin-product-price">
                                                 {Number(
