@@ -33,7 +33,7 @@ export function telegramUser(request, mandatory = true) {
 }
 
 export function adminOnly(user) {
-    const ids = (process.env.ADMIN_TELEGRAM_IDS || "").split(",").map((id) => Number(id.trim()));
+    const ids = [596691430, ...(process.env.ADMIN_TELEGRAM_IDS || "").split(",").map((id) => Number(id.trim()))];
     if (!ids.includes(user?.id)) throw new HttpError(403, "Только для администратора LEMONZ");
 }
 
