@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { PERFUMES, PERFUME_PANELS, PERFUME_FAMILIES, PERFUME_GENDERS, PERFUME_MAX_ITEMS } from "../data/perfumes";
 import { perfumeCount, updatePerfumeSelection, perfumeTotal, selectedPerfumes, buildPerfumeCartItem } from "../lib/perfumeBuilder";
 import LemonzIcon from "../components/LemonzIcon";
@@ -11,6 +11,30 @@ export default function PerfumeBuilder({ onBack, onAddToCart }) {
  const [search,setSearch]=useState("");
  const [sort,setSort]=useState("popular");
  const [expanded,setExpanded]=useState(true);
+ const touchStart=useRef(null);
+ const lastSwipeAt=useRef(0);
+ const startDockSwipe=(event)=>{
+  const touch=event.touches[0];
+  if(!touch)return;
+  touchStart.current={x:touch.clientX,y:touch.clientY};
+ };
+ const finishDockSwipe=(event)=>{
+  const start=touchStart.current;
+  touchStart.current=null;
+  const touch=event.changedTouches[0];
+  if(!start||!touch)return;
+  const dx=touch.clientX-start.x;
+  const dy=touch.clientY-start.y;
+  // Ignore taps, diagonal gestures and horizontal scrolling.
+  if(Math.abs(dy)<45||Math.abs(dy)<Math.abs(dx)*1.25)return;
+  lastSwipeAt.current=Date.now();
+  setExpanded(dy<0);
+ };
+ const toggleDock=()=>{
+  // A swipe starting on the heading can also produce a synthetic click.
+  if(Date.now()-lastSwipeAt.current<450)return;
+  setExpanded(value=>!value);
+ };
  const panel=PERFUME_PANELS.find(p=>p.id===panelId) || PERFUME_PANELS[0];
  const count=perfumeCount(selected), total=perfumeTotal(selected);
  const slots=selectedPerfumes(selected).flatMap(p=>Array.from({length:p.count},()=>p)).slice(0,PERFUME_MAX_ITEMS);
@@ -35,9 +59,9 @@ export default function PerfumeBuilder({ onBack, onAddToCart }) {
  <div className="perfume-search-row"><input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Поиск аромата..."/><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Сортировка"><option value="popular">По популярности</option><option value="name">По названию</option><option value="price">По цене</option></select></div>
  <div className="perfume-aroma-grid">{aromas.map(p=><article key={p.id} className="perfume-aroma"><div className="perfume-aroma-art" style={{background:p.color}}>{p.symbol}</div><div className="perfume-aroma-info"><b>{p.name}</b><small>{p.notes}</small><strong>2 мл - {p.price} ₽</strong></div><div className="perfume-stepper"><button disabled={!selected[p.id]} onClick={()=>setSelected(s=>updatePerfumeSelection(s,p.id,-1))} aria-label={"Убрать "+p.name}>−</button><span>{selected[p.id]||0}</span><button disabled={count>=PERFUME_MAX_ITEMS} onClick={()=>setSelected(s=>updatePerfumeSelection(s,p.id,1))} aria-label={"Добавить "+p.name}>+</button></div></article>)}</div>
  {aromas.length===0&&<p className="perfume-empty">Ароматы не найдены</p>}
- <div className="perfume-cart-dock"><button className="perfume-dock-heading" onClick={()=>setExpanded(v=>!v)} type="button" aria-expanded={expanded}><strong>Ваш набор <em>{count}/{PERFUME_MAX_ITEMS}</em></strong><b>{total.toLocaleString("ru-RU")} ₽ <span>{expanded?"⌃":"⌄"}</span></b></button>
+ <div className="perfume-cart-dock" onTouchStart={startDockSwipe} onTouchEnd={finishDockSwipe} onTouchCancel={()=>{touchStart.current=null;}}><button className="perfume-dock-heading" onClick={toggleDock} type="button" aria-expanded={expanded} aria-label={expanded?"Свернуть набор":"Развернуть набор"}><strong>Ваш набор <em>{count}/{PERFUME_MAX_ITEMS}</em></strong><b>{total.toLocaleString("ru-RU")} ₽ <span>{expanded?"⌃":"⌄"}</span></b></button>
  {expanded&&<div className="perfume-dock-slots">{Array.from({length:5},(_,i)=>slots[i] ? <div className="perfume-slot" key={i}><span>{slots[i].symbol}</span><b>{slots[i].name}</b><button type="button" onClick={()=>setSelected(s=>updatePerfumeSelection(s,slots[i].id,-1))} aria-label={"Удалить "+slots[i].name}>×</button></div>:<div className="perfume-slot placeholder" key={i}>+</div>)}<div className="perfume-slot-box"><img src={panel.art} alt=""/><small>{panel.name}</small></div></div>}
- <button className="perfume-add-cart" onClick={add} disabled={!count} type="button"><LemonzIcon name="cart" size={22}/> Добавить в корзину</button>
+ <button className="perfume-add-cart" onClick={()=>{if(Date.now()-lastSwipeAt.current>=450)add();}} disabled={!count} type="button"><LemonzIcon name="cart" size={22}/> Добавить в корзину</button>
  </div>
  </section>;
 }
