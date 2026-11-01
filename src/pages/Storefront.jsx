@@ -88,7 +88,7 @@ function Shelf({ title, products, favoriteProductIds, onToggleFavorite, onOpenPr
     );
 }
 
-export default function Storefront({ products, favoriteProductIds = [], onToggleFavorite, onOpenProduct, onNavigate, onOpenCategory }) {
+export default function Storefront({ perfumeVisible = true, products, favoriteProductIds = [], onToggleFavorite, onOpenProduct, onNavigate, onOpenCategory }) {
     const [slideIndex, setSlideIndex] = useState(0);
     const slide = SLIDES[slideIndex];
     const changeSlide = (direction) => setSlideIndex((current) => (current + direction + SLIDES.length) % SLIDES.length);
@@ -127,6 +127,8 @@ export default function Storefront({ products, favoriteProductIds = [], onToggle
                     <ReferenceCrop region="auction" />
                 </button>
             </section>
+
+            {perfumeVisible && <button type="button" className="storefront-perfume-banner" onClick={() => onNavigate("Конструктор парфюма")}><span className="storefront-perfume-banner-copy"><small>LEMONZ · НОВИНКА</small><strong>КОНСТРУКТОР<br/>ПАРФЮМА</strong><span>Собери набор из 5 ароматов</span><b>Создать свой набор →</b></span><span className="storefront-perfume-banner-art" aria-hidden="true"><span className="perfume-mini-case">✕<img src="/Clove.png" alt=""/></span><span className="perfume-mini-vials">▮ ▮ ▮ ▮ ▮</span></span></button>}
 
             <nav className="storefront-categories" aria-label="Категории фигурок">
                 {HOME_CATEGORIES.map((category, index) => (

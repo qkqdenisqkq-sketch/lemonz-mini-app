@@ -10,6 +10,7 @@ import ProductDetail from "./components/ProductDetail";
 import ScrollTop from "./components/ScrollTop";
 
 import Catalog from "./pages/Catalog";
+import PerfumeBuilder from "./pages/PerfumeBuilder";
 import Storefront from "./pages/Storefront";
 import Voting from "./pages/Voting";
 import Auctions from "./pages/Auctions";
@@ -42,6 +43,8 @@ import "./styles/voting-reference.css";
 import "./styles/cart-promo.css";
 import "./styles/admin-promos.css";
 import "./styles/catalog-reference.css";
+import "./styles/perfume.css";
+import "./styles/perfume-banner.css";
 
 function App() {
     const [activePage, setActivePage] =
@@ -50,6 +53,7 @@ function App() {
     const [catalogSearchOpen, setCatalogSearchOpen] = useState(false);
 
     const [auctionDetailOpen, setAuctionDetailOpen] = useState(false);
+    const [perfumeVisible, setPerfumeVisible] = useLocalStorage("lemonz-perfume-visible-v1", true);
 
     const [theme, setTheme] = useLocalStorage("lemonz-theme", "light");
     const activeTheme = theme === "dark" ? "dark" : "light";
@@ -271,6 +275,8 @@ function App() {
 
         haptic();
 
+        if (page === "Конструктор парфюма" && !perfumeVisible) return;
+
         if (page === "Каталог") {
             setCatalogCategory("Все");
             setCatalogSearchOpen(false);
@@ -357,6 +363,14 @@ function App() {
 
         haptic("success");
         setSelectedProduct(null);
+    };
+
+    const addPerfumeSet = (item) => {
+        if (!item) return;
+        if (!cart.length) setAppliedPromo(null);
+        setCart((current) => [...current, item]);
+        haptic("success");
+        showMessage("Набор ароматов добавлен в корзину");
     };
 
     const increaseQuantity = (
@@ -699,6 +713,7 @@ const checkout = async (comment = "") => {
             <main>
                 {activePage === "Главная" && (
                     <Storefront
+                        perfumeVisible={perfumeVisible}
                         products={products}
                         favoriteProductIds={favoriteProductIds}
                         onToggleFavorite={toggleFavorite}
@@ -710,6 +725,8 @@ const checkout = async (comment = "") => {
                         }}
                     />
                 )}
+
+                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} />}
 
                 {activePage === "Каталог" && (
                     <Catalog
@@ -809,6 +826,8 @@ const checkout = async (comment = "") => {
                             isAdmin={isAdmin}
                             showMessage={showMessage}
                             haptic={haptic}
+                            perfumeVisible={perfumeVisible}
+                            onPerfumeVisibleChange={setPerfumeVisible}
                             demoPromos={demoPromos}
                             setDemoPromos={setDemoPromos}
                             onPromoMutation={() => setAppliedPromo(null)}
@@ -837,7 +856,7 @@ const checkout = async (comment = "") => {
                 }
             />
 
-            {!(activePage === "Аукцион" && auctionDetailOpen) && <BottomNav
+            {activePage !== "Конструктор парфюма" && !(activePage === "Аукцион" && auctionDetailOpen) && <BottomNav
                 activePage={
                     activePage
                 }
