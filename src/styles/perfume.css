@@ -42,3 +42,108 @@
 @media (prefers-reduced-motion: reduce) {
   .perfume-dock-slots-shell { transition: none; }
 }
+
+
+/* Compact perfume category picker: a pop-up replaces the long horizontal category strip. */
+.perfume-family-filter{
+ position:relative;
+ z-index:30;
+ margin:10px 0 14px;
+}
+.perfume-family-toggle{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ width:100%;
+ min-height:44px;
+ padding:10px 13px;
+ border:1px solid #ded0ed;
+ border-radius:14px;
+ background:#f2e9fb;
+ color:#4e3565;
+ text-align:left;
+ font-size:12px;
+}
+.perfume-family-toggle strong{
+ margin-left:auto;
+ color:#7136b8;
+ font-size:13px;
+ font-weight:850;
+}
+.perfume-family-chevron{
+ font-size:22px;
+ line-height:1;
+ color:#753bb3;
+ transition:transform .18s ease;
+}
+.perfume-family-toggle.is-open .perfume-family-chevron{
+ transform:rotate(180deg);
+}
+.perfume-family-menu{
+ position:absolute;
+ top:calc(100% + 6px);
+ left:0;
+ right:0;
+ z-index:31;
+ display:grid;
+ gap:3px;
+ max-height:min(53vh,330px);
+ overflow-y:auto;
+ padding:6px;
+ border:1px solid #e1c9ef;
+ border-radius:15px;
+ background:#fff;
+ box-shadow:0 12px 30px rgba(64,28,91,.19);
+ animation:perfume-family-open .16s ease-out;
+ overscroll-behavior:contain;
+}
+.perfume-family-menu button{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ width:100%;
+ min-height:42px;
+ padding:10px 12px;
+ border:0;
+ border-radius:10px;
+ background:transparent;
+ color:#342341;
+ text-align:left;
+ font-size:13px;
+}
+.perfume-family-menu button.active{
+ background:#eee1fc;
+ color:#6e2fba;
+ font-weight:800;
+}
+.perfume-family-check{color:#8741d1;font-size:17px;}
+.perfume-family-menu button:focus-visible,.perfume-family-toggle:focus-visible{
+ outline:2px solid #985ee1;
+ outline-offset:2px;
+}
+.app.theme-dark .perfume-family-toggle{
+ background:#2e233b;
+ border-color:#5a426e;
+ color:#e8d5f6;
+}
+.app.theme-dark .perfume-family-toggle strong,
+.app.theme-dark .perfume-family-chevron{color:#d0a2ff;}
+.app.theme-dark .perfume-family-menu{
+ background:#2c2238;
+ border-color:#6c4e81;
+ box-shadow:0 12px 30px rgba(0,0,0,.4);
+}
+.app.theme-dark .perfume-family-menu button{color:#f6eafa;}
+.app.theme-dark .perfume-family-menu button.active{
+ background:#543670;
+ color:#f6dfff;
+}
+@keyframes perfume-family-open{
+ from{opacity:0;transform:translateY(-5px)}
+ to{opacity:1;transform:translateY(0)}
+}
+@media (prefers-reduced-motion: reduce){
+ .perfume-family-menu{animation:none}
+ .perfume-family-chevron{transition:none}
+}

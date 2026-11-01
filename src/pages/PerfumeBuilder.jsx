@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PERFUMES, PERFUME_FAMILIES, PERFUME_GENDERS, PERFUME_MAX_ITEMS } from "../data/perfumes";
 import { perfumeCount, updatePerfumeSelection, perfumeTotal, selectedPerfumes, buildPerfumeCartItem } from "../lib/perfumeBuilder";
 import LemonzIcon from "../components/LemonzIcon";
@@ -8,6 +8,8 @@ export default function PerfumeBuilder({ onBack, onAddToCart, kits = [], showScr
  const [selected,setSelected]=useState({});
  const [gender,setGender]=useState("Все");
  const [family,setFamily]=useState("Все");
+ const [familyMenuOpen,setFamilyMenuOpen]=useState(false);
+ const familyMenuRef=useRef(null);
  const [search,setSearch]=useState("");
  const [sort,setSort]=useState("popular");
  const [expanded,setExpanded]=useState(true);
@@ -35,6 +37,27 @@ export default function PerfumeBuilder({ onBack, onAddToCart, kits = [], showScr
   if(Date.now()-lastSwipeAt.current<450)return;
   setExpanded(value=>!value);
  };
+ useEffect(()=>{
+  if(!familyMenuOpen)return undefined;
+  const closeOutside=(event)=>{
+   if(!familyMenuRef.current?.contains(event.target))setFamilyMenuOpen(false);
+  };
+  const closeOnEscape=(event)=>{
+   if(event.key!=="Escape")return;
+   setFamilyMenuOpen(false);
+   familyMenuRef.current?.querySelector(".perfume-family-toggle")?.focus();
+  };
+  document.addEventListener("pointerdown",closeOutside);
+  document.addEventListener("keydown",closeOnEscape);
+  return ()=>{
+   document.removeEventListener("pointerdown",closeOutside);
+   document.removeEventListener("keydown",closeOnEscape);
+  };
+ },[familyMenuOpen]);
+ const chooseFamily=(nextFamily)=>{
+  setFamily(nextFamily);
+  setFamilyMenuOpen(false);
+ };
  const panel=kits.find(p=>p.id===panelId) || kits[0];
  const count=perfumeCount(selected), total=perfumeTotal(selected);
  const slots=selectedPerfumes(selected).flatMap(p=>Array.from({length:p.count},()=>p)).slice(0,PERFUME_MAX_ITEMS);
@@ -58,7 +81,16 @@ export default function PerfumeBuilder({ onBack, onAddToCart, kits = [], showScr
  <div className="perfume-section-row"><h2>Оформление коробки</h2><span>Сменная панель</span></div>
  <div className="perfume-panel-track">{kits.map(p=><button className={"perfume-panel-card "+(panel.id===p.id?"active":"")} key={p.id} onClick={()=>setPanelId(p.id)} type="button"><div style={{"--panel-accent":p.accent,"--panel-dark":p.dark}}><img src={p.art} alt=""/><span>{p.name.toUpperCase()}</span></div><b>{p.name.toUpperCase()}</b></button>)}</div>
  <div className="perfume-filters-title"><h2>Фильтры</h2><div className="perfume-chip-track">{PERFUME_GENDERS.map(g=><button type="button" className={gender===g?"active":""} key={g} onClick={()=>setGender(g)}>{g}</button>)}</div></div>
- <div className="perfume-chip-track families">{PERFUME_FAMILIES.map(f=><button type="button" className={family===f?"active":""} key={f} onClick={()=>setFamily(f)}>{f}</button>)}</div>
+ <div className="perfume-family-filter" ref={familyMenuRef}>
+  <button type="button" className={"perfume-family-toggle"+(familyMenuOpen?" is-open":"")} aria-haspopup="menu" aria-expanded={familyMenuOpen} aria-controls="perfume-family-menu" onClick={()=>setFamilyMenuOpen(open=>!open)}>
+   <span>Категория ароматов</span><strong>{family}</strong><span className="perfume-family-chevron" aria-hidden="true">⌄</span>
+  </button>
+  {familyMenuOpen && <div id="perfume-family-menu" className="perfume-family-menu" role="menu" aria-label="Категории ароматов">
+   {PERFUME_FAMILIES.map(f=><button type="button" key={f} role="menuitemradio" aria-checked={family===f} className={family===f?"active":""} onClick={()=>chooseFamily(f)}>
+     <span>{f}</span>{family===f&&<span className="perfume-family-check" aria-hidden="true">✓</span>}
+   </button>)}
+  </div>}
+ </div>
  <div className="perfume-search-row"><input type="search" value={search} onChange={e=>setSearch(e.target.value)} placeholder="Поиск аромата..."/><select value={sort} onChange={e=>setSort(e.target.value)} aria-label="Сортировка"><option value="popular">По популярности</option><option value="name">По названию</option><option value="price">По цене</option></select></div>
  <div className="perfume-aroma-grid">{aromas.map(p=><article key={p.id} className="perfume-aroma"><div className="perfume-aroma-art" style={{background:p.color}}>{p.symbol}</div><div className="perfume-aroma-info"><b>{p.name}</b><small>{p.notes}</small><strong>2 мл - {p.price} ₽</strong></div><div className="perfume-stepper"><button disabled={!selected[p.id]} onClick={()=>setSelected(s=>updatePerfumeSelection(s,p.id,-1))} aria-label={"Убрать "+p.name}>−</button><span>{selected[p.id]||0}</span><button disabled={count>=PERFUME_MAX_ITEMS} onClick={()=>setSelected(s=>updatePerfumeSelection(s,p.id,1))} aria-label={"Добавить "+p.name}>+</button></div></article>)}</div>
  {aromas.length===0&&<p className="perfume-empty">Ароматы не найдены</p>}
