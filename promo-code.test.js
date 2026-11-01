@@ -133,7 +133,7 @@ test("заказ пересчитывает скидку на сервере и 
     const response = await call(orderHandler, {
         orderNumber: "LF-1", customer: { telegramId: 12345, firstName: "Сергей" },
         items: cart, promoCode: "LEMONZ10", total: 18000,
-    });
+    }, 12345);
     assert.equal(response.statusCode, 200);
     assert.match(state.telegramText, /LEMONZ10/);
     assert.match(state.telegramText, /Скидка: −2\s?000 ₽/);
@@ -144,7 +144,7 @@ test("поддельная итоговая сумма не отправляет
     const state = mockPromoBackend();
     const response = await call(orderHandler, {
         orderNumber: "LF-2", items: cart, promoCode: "LEMONZ10", total: 100,
-    });
+    }, 12345);
     assert.equal(response.statusCode, 409);
     assert.equal(state.telegramCalls, 0);
 });
@@ -188,4 +188,15 @@ test("код личной награды нельзя заменить общи�
     mockPromoBackend({ rewards: [{ discount_code: "WINNER2026", author_id: 12345, name: "Clove", normalized_key: "clove", discount_redeemed: false }] });
     const result = await call(adminHandler, { action: "create", code: "WINNER2026", percent: 25 }, 12345);
     assert.equal(result.statusCode, 409);
+});
+
+
+test("заказ без подписи Telegram или с чужим ID отклоняется", async () => {
+    const state = mockPromoBackend();
+    const order = { orderNumber: "LF-3", customer: { telegramId: 12345 }, items: cart, total: 20000 };
+    const unsigned = await call(orderHandler, order);
+    assert.equal(unsigned.statusCode, 401);
+    const mismatched = await call(orderHandler, order, 67890);
+    assert.equal(mismatched.statusCode, 403);
+    assert.equal(state.telegramCalls, 0);
 });
