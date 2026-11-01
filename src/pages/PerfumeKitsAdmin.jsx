@@ -115,7 +115,7 @@ export default function PerfumeKitsAdmin({ config, mode, onAction }) {
       </label>
       {mode === "demo" && <p className="perfume-admin-note">Пробный режим. Изменения и загруженные изображения видны только в этом браузере.</p>}
       {mode === "loading" && <p className="perfume-admin-note">Загружаю настройки…</p>}
-      {mode === "error" && <p className="perfume-admin-note">Сервер недоступен или SQL-миграция не выполнена. Для общего управления нужны Supabase и переменные окружения.</p>}
+      {mode === "error" && <p className="perfume-admin-note" role="alert">Нет подключения к общей базе. Редактирование отключено, чтобы изменения не сохранились только на твоём устройстве. Проверь переменные Vercel и SQL-миграции Supabase, затем обнови Mini App.</p>}
       {mode === "live" && <p className="perfume-admin-note">Изменения сохраняются в общей базе и появятся у всех посетителей после обновления страницы.</p>}
     </div>
 

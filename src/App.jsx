@@ -76,7 +76,7 @@ function App() {
                     setPerfumeMode("live");
                 }
             } catch {
-                if (active) setPerfumeMode("demo");
+                if (active) setPerfumeMode(import.meta.env.DEV ? "demo" : "error");
             }
         };
         load();
@@ -558,8 +558,8 @@ const checkout = async (comment = "") => {
             {
                 method: "POST",
                 headers: {
-                    "Content-Type":
-                        "application/json",
+                    "Content-Type": "application/json",
+                    "x-telegram-init-data": window.Telegram?.WebApp?.initData || "",
                 },
                 body: JSON.stringify(order),
             }

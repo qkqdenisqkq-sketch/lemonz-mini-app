@@ -1,4 +1,4 @@
-import { HttpError, db } from "./_shared.js";
+import { HttpError, db, telegramUser } from "./_shared.js";
 import { normalizePerfumeConfig } from "../src/lib/perfumeKits.js";
 import { checkPerfumeItems } from "./_perfumeOrders.js";
 import { resolvePromo, validateOrderItems } from "./_promos.js";
@@ -192,6 +192,11 @@ export default async function handler(
                 });
         }
 
+        // Use the signed Telegram identity instead of trusting a client-supplied ID.
+        const verifiedUser = telegramUser(request);
+        if (order.customer?.telegramId != null && String(order.customer.telegramId) !== String(verifiedUser.id)) {
+            throw new HttpError(403, "Telegram ID заказа не совпадает с авторизованным пользователем");
+        }
         const items = validateOrderItems(order.items);
         if (items.some((item) => item.productId === "perfume-set")) {
             const records = await db("perfume_config?id=eq.1&select=kits,perfumes");
@@ -205,6 +210,11 @@ export default async function handler(
         }
         const confirmedOrder = {
             ...order,
+            customer: {
+                ...(order.customer || {}),
+                telegramId: verifiedUser.id,
+                username: verifiedUser.username,
+            },
             items,
             promo,
             subtotal: pricing.subtotal,
