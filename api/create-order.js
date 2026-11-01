@@ -1,4 +1,6 @@
-import { HttpError } from "./_shared.js";
+import { HttpError, db } from "./_shared.js";
+import { normalizePerfumeConfig } from "../src/lib/perfumeKits.js";
+import { checkPerfumeItems } from "./_perfumeOrders.js";
 import { resolvePromo, validateOrderItems } from "./_promos.js";
 import { cartPricing } from "../src/lib/cartPricing.js";
 
@@ -191,6 +193,11 @@ export default async function handler(
         }
 
         const items = validateOrderItems(order.items);
+        if (items.some((item) => item.productId === "perfume-set")) {
+            const records = await db("perfume_config?id=eq.1&select=kits,perfumes");
+            const config = normalizePerfumeConfig(records?.[0]);
+            checkPerfumeItems(items, config);
+        }
         const promo = order.promoCode ? await resolvePromo(request, order.promoCode, items) : null;
         const pricing = cartPricing(items, promo);
         if (Number(order.total) !== pricing.total) {

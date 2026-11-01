@@ -1,4 +1,5 @@
 import { PERFUME_PANELS } from "../data/perfumes.js";
+import { normalizeAromas, changeAromas } from "./perfumeAromas.js";
 
 export const DEFAULT_PERFUME_KITS = PERFUME_PANELS.map((item) => ({
   id: item.id, name: item.name, art: item.art,
@@ -24,6 +25,7 @@ export function normalizePerfumeConfig(value) {
   return {
     visible: typeof value?.visible === "boolean" ? value.visible : true,
     kits: normalizePerfumeKits(value?.kits),
+    perfumes: normalizeAromas(value?.perfumes),
     version: Number.isSafeInteger(value?.version) ? value.version : 0,
   };
 }
@@ -48,6 +50,9 @@ export function validatePerfumeKit(input) {
 
 export function changePerfumeConfig(current, action, payload, generateId = () => "kit-" + Date.now()) {
   const config = normalizePerfumeConfig(current);
+  if (["aromaCreate","aromaUpdate","aromaDelete"].includes(action)) {
+    return { ...config, perfumes: changeAromas(config.perfumes, action, payload, generateId) };
+  }
   if (action === "visibility") {
     if (typeof payload?.visible !== "boolean") throw Error("Некорректная настройка видимости");
     return { ...config, visible: payload.visible };

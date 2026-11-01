@@ -147,3 +147,36 @@
  .perfume-family-menu{animation:none}
  .perfume-family-chevron{transition:none}
 }
+
+
+/* LEMONZ planetary controls instead of generic arrow glyphs. */
+.perfume-builder .perfume-family-chevron svg,
+.perfume-builder .perfume-toggle-emblem svg{
+ display:block;
+ transition:transform 250ms cubic-bezier(.2,.8,.25,1);
+}
+.perfume-builder .perfume-toggle-emblem{
+ display:inline-flex;
+ align-items:center;
+ justify-content:center;
+ vertical-align:middle;
+ border-radius:50%;
+ padding:3px;
+ background:rgba(138,78,206,.12);
+}
+.perfume-builder .perfume-toggle-emblem.is-expanded svg{transform:rotate(170deg)}
+.perfume-builder .perfume-family-toggle.is-open .perfume-family-chevron svg{transform:rotate(80deg)}
+.perfume-builder .perfume-family-toggle.is-open .perfume-family-chevron{transform:none}
+.perfume-builder .perfume-dock-scroll-top svg{display:block}
+.perfume-builder .perfume-aroma-art{overflow:hidden}
+.perfume-builder .perfume-aroma-art img{width:100%;height:100%;object-fit:cover;border-radius:inherit}
+.perfume-builder .perfume-search-row select{appearance:none;background-image:radial-gradient(circle at 89% 50%, #aa76da 2px, transparent 3px);background-repeat:no-repeat;padding-right:15px}
+.app.theme-dark .perfume-builder .perfume-toggle-emblem{background:rgba(210,169,243,.2)}
+@media(prefers-reduced-motion:reduce){
+ .perfume-builder .perfume-family-chevron svg,
+ .perfume-builder .perfume-toggle-emblem svg{transition:none}
+}
+
+.perfume-builder .perfume-slot .perfume-selected-image{
+ width:34px;height:35px;object-fit:cover;border-radius:7px;
+}

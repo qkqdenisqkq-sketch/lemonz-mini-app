@@ -1,0 +1,28 @@
+.perfume-aroma-editor{margin-top:12px}
+.perfume-aroma-editor input,.perfume-aroma-editor select{display:block;width:100%;max-width:100%;min-width:0;border:1px solid #e2d1ee;border-radius:11px;padding:9px 11px;background:#fdfaff;color:#2c1b37;font-size:13px}
+.perfume-aroma-editor label{display:grid;gap:6px;font-size:12px;font-weight:700}
+.perfume-aroma-admin-list{display:grid;gap:7px;max-height:380px;overflow-y:auto;margin:12px 0 20px;overscroll-behavior:contain}
+.perfume-aroma-admin-row{display:grid;grid-template-columns:54px minmax(0,1fr);gap:9px;align-items:center;border:1px solid #e9ddf0;padding:7px;border-radius:12px}
+.perfume-aroma-admin-picture{height:59px;width:54px;display:grid;place-items:center;overflow:hidden;font-size:26px;border-radius:8px}
+.perfume-aroma-admin-picture img{height:100%;width:100%;object-fit:cover}
+.perfume-aroma-admin-row>div:nth-child(2){display:grid;gap:3px;min-width:0}
+.perfume-aroma-admin-row>div:nth-child(2)>strong{font-size:13px;overflow-wrap:anywhere}
+.perfume-aroma-admin-row small{font-size:10px;color:#716080}
+.perfume-aroma-admin-row b{font-size:11px}
+.perfume-aroma-admin-actions{display:flex;gap:6px;grid-column:1/-1}
+.perfume-aroma-admin-actions button,.perfume-aroma-form-photo button,.perfume-aroma-form .perfume-admin-list-head button{border:1px solid #dac4ed;background:#f3eafa;color:#673890;padding:8px;border-radius:10px;font-size:12px;font-weight:700}
+.perfume-aroma-admin-actions .danger{color:#a23454;background:#fff1f5;border-color:#efd0da}
+.perfume-aroma-form{display:grid;gap:12px;border-top:1px solid #e5d6ef;padding-top:14px}
+.perfume-aroma-form h3{font-size:16px;margin:0}
+.perfume-aroma-form-two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.perfume-aroma-form-photo{display:grid;gap:9px}
+.perfume-aroma-preview{display:grid;place-items:center;width:100px;height:108px;border-radius:12px;overflow:hidden;font-size:38px}
+.perfume-aroma-preview img{width:100%;height:100%;object-fit:cover}
+.perfume-color-label{display:flex!important;flex-direction:row;align-items:center;justify-content:space-between}
+.perfume-color-label input{width:60px}
+.perfume-aroma-form .perfume-admin-save{display:flex;align-items:center;justify-content:center;gap:8px}
+.perfume-aroma-editor button:disabled{opacity:.5;cursor:not-allowed}
+.app.theme-dark .perfume-aroma-editor input,.app.theme-dark .perfume-aroma-editor select{color:#f9efff;background:#332640;border-color:#674878}
+.app.theme-dark .perfume-aroma-admin-row{border-color:#624b71}
+.app.theme-dark .perfume-aroma-admin-row small{color:#d7bfdf}
+.app.theme-dark .perfume-aroma-admin-actions button,.app.theme-dark .perfume-aroma-form-photo button,.app.theme-dark .perfume-aroma-form .perfume-admin-list-head button{background:#503661;color:#f3e2ff;border-color:#74528d}

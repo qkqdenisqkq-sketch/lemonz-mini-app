@@ -47,6 +47,7 @@ import "./styles/catalog-reference.css";
 import "./styles/perfume.css";
 import "./styles/perfume-banner.css";
 import "./styles/admin-perfume.css";
+import "./styles/admin-perfume-aromas.css";
 import "./styles/perfume-kit-preview.css";
 
 function App() {
@@ -520,6 +521,8 @@ const checkout = async (comment = "") => {
         items: cart.map((item) => ({
             cartId: item.cartId,
             productId: item.productId,
+            perfumePanelId: item.perfumePanelId,
+            perfumeSelection: item.perfumeSelection,
             name: item.name,
             category: item.category,
             image: item.image,
@@ -777,7 +780,7 @@ const checkout = async (comment = "") => {
                     />
                 )}
 
-                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder kits={perfumeConfig.kits} onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} showScrollTop={showScrollTop} onScrollToTop={scrollToTop} />}
+                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder kits={perfumeConfig.kits} perfumes={normalizePerfumeConfig(perfumeConfig).perfumes} onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} showScrollTop={showScrollTop} onScrollToTop={scrollToTop} />}
 
                 {activePage === "Каталог" && (
                     <Catalog

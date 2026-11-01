@@ -39,3 +39,18 @@
 .app.theme-dark .perfume-admin-kit-actions .danger{color:#ffb2c7;background:#582e44}
 .app.theme-dark .perfume-admin-save{background:#d7b1ee;color:#21112b}
 @media(min-width:480px){.perfume-admin-image-fields{grid-template-columns:1fr 1fr}}
+
+
+.perfume-admin-panel-select-label{display:grid;gap:7px;font-size:12px;color:#503863;font-weight:750}
+.perfume-admin-panel-select-wrap{position:relative;display:block}
+.perfume-admin-panel-select-wrap select{display:block;appearance:none;width:100%;min-height:44px;border:1px solid #d9bfeb;border-radius:13px;background:#f5eafc;color:#321d41;padding:12px 43px 12px 13px;font-weight:750;cursor:pointer}
+.perfume-admin-panel-select-wrap>svg{position:absolute;top:50%;right:14px;transform:translateY(-50%);pointer-events:none;color:#8d4bd1}
+.perfume-admin-current-panel{display:flex;align-items:center;gap:10px;margin-top:12px;padding:8px;background:#f8f0fc;border-radius:12px}
+.perfume-admin-current-panel img{width:50px;height:54px;object-fit:cover;border-radius:8px}
+.perfume-admin-current-panel div{display:grid;gap:4px;flex:1;min-width:0}
+.perfume-admin-current-panel strong{overflow-wrap:anywhere}
+.perfume-admin-current-panel small{font-size:11px;color:#816394}
+.perfume-admin-current-panel .danger{border:1px solid #eeccd9;border-radius:9px;padding:8px;background:#fff2f5;color:#a13350;font-weight:700}
+.app.theme-dark .perfume-admin-panel-select-label{color:#e6cbf4}
+.app.theme-dark .perfume-admin-panel-select-wrap select,.app.theme-dark .perfume-admin-current-panel{background:#402d51;color:#f5e9ff;border-color:#76558b}
+.app.theme-dark .perfume-admin-current-panel small{color:#d2bce3}

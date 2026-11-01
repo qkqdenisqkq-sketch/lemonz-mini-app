@@ -3,7 +3,7 @@ import { adminOnly, db, errorResponse, HttpError, requireConfigured, telegramUse
 import { normalizePerfumeConfig, changePerfumeConfig } from "../src/lib/perfumeKits.js";
 
 async function load() {
-  const records = await db("perfume_config?id=eq.1&select=visible,kits,version");
+  const records = await db("perfume_config?id=eq.1&select=visible,kits,perfumes,version");
   if (!records?.length) throw new HttpError(503, "Таблица конструктора не настроена. Выполни SQL-миграцию.");
   return normalizePerfumeConfig(records[0]);
 }
@@ -21,15 +21,16 @@ export default async function handler(request, response) {
     adminOnly(user);
     const previous = await load();
     const { action, ...payload } = request.body || {};
+    if (["aromaCreate","aromaUpdate"].includes(action) && /^data:/i.test(String(payload.aroma?.image || "").trim())) throw new HttpError(400, "Загрузи фотографию аромата на сервер перед сохранением.");
     if (["create","update"].includes(action) && ["art","previewImage"].some(key => String(payload.kit?.[key] || "").startsWith("data:"))) throw new HttpError(400, "Загрузи фотографию через кнопку в админ-панели, затем сохрани.");
     let next;
     try { next = changePerfumeConfig(previous, action, payload, () => "kit-" + crypto.randomUUID()); }
     catch (error) { throw new HttpError(400, error?.message || "Проверь данные оформления"); }
     const updated = await db(
-      `perfume_config?id=eq.1&version=eq.${previous.version}&select=visible,kits,version`,
+      `perfume_config?id=eq.1&version=eq.${previous.version}&select=visible,kits,perfumes,version`,
       {
         method: "PATCH",
-        body: { visible: next.visible, kits: next.kits, version: previous.version + 1 },
+        body: { visible: next.visible, kits: next.kits, perfumes: next.perfumes, version: previous.version + 1 },
         prefer: "return=representation",
       }
     );

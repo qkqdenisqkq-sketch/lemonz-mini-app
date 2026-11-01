@@ -1,4 +1,6 @@
 import { useRef, useState } from "react";
+import PerfumeAromasAdmin from "./PerfumeAromasAdmin";
+import LemonzIcon from "../components/LemonzIcon";
 
 const EMPTY = { name: "", art: "", previewImage: "", accent: "#b678e7", dark: "#241328" };
 
@@ -117,21 +119,29 @@ export default function PerfumeKitsAdmin({ config, mode, onAction }) {
       {mode === "live" && <p className="perfume-admin-note">Изменения сохраняются в общей базе и появятся у всех посетителей после обновления страницы.</p>}
     </div>
 
+
     <div className="perfume-admin-settings">
       <div className="perfume-admin-list-head"><h2>Оформления коробок</h2><strong>{kits.length}</strong></div>
-      <div className="perfume-admin-kit-list">
-        {kits.map((kit) => <div className="perfume-admin-kit" key={kit.id}>
-          <div className="perfume-admin-kit-images">
-            <img src={kit.art} alt={`Обложка ${kit.name}`} />
-            {kit.previewImage && <img src={kit.previewImage} alt={`Фото набора ${kit.name}`} />}
-          </div>
-          <div className="perfume-admin-kit-meta"><strong>{kit.name}</strong><small>{kit.previewImage ? "Панель + фото комплекта" : "Панель без фото комплекта"}</small></div>
-          <div className="perfume-admin-kit-actions">
-            <button type="button" disabled={!canEdit || busy} onClick={() => edit(kit)}>Изменить</button>
-            <button type="button" className="danger" disabled={!canEdit || busy || kits.length <= 1} onClick={() => remove(kit)}>Удалить</button>
-          </div>
-        </div>)}
-      </div>
+      <label className="perfume-admin-panel-select-label">Выбор панели
+       <span className="perfume-admin-panel-select-wrap">
+        <select value={editingId || ""} disabled={!canEdit || busy} onChange={(event) => {
+          const kit = kits.find(item => item.id === event.target.value);
+          if (kit) edit(kit); else reset();
+        }}>
+          <option value="">✦ Добавить новую панель</option>
+          {kits.map(kit => <option key={kit.id} value={kit.id}>{kit.name}</option>)}
+        </select>
+        <LemonzIcon name="planet" size={19}/>
+       </span>
+      </label>
+      {editingId && <div className="perfume-admin-current-panel">
+         <img src={draft.art} alt={"Панель "+draft.name}/>
+         <div><strong>{draft.name}</strong><small>{draft.previewImage ? "Есть фото набора" : "Стандартный вид набора"}</small></div>
+         <button type="button" className="danger" disabled={!canEdit || busy || kits.length<=1} onClick={() => {
+           const kit=kits.find(item=>item.id===editingId);
+           if(kit)remove(kit);
+         }}>Удалить</button>
+      </div>}
     </div>
 
     <form className="perfume-admin-settings perfume-admin-form" onSubmit={save}>
@@ -162,5 +172,6 @@ export default function PerfumeKitsAdmin({ config, mode, onAction }) {
       {error && <p className="perfume-admin-error" role="alert">{error}</p>}
       {message && <p className="perfume-admin-success" role="status">{message}</p>}
     </form>
+    <PerfumeAromasAdmin config={config} mode={mode} onAction={onAction} />
   </div>;
 }
