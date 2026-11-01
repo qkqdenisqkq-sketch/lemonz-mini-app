@@ -209,7 +209,7 @@ end; $$;
 -- A locked, atomic duplicate check prevents two concurrent proposals from
 -- claiming the same character. Names are transliterated/aliased by the API.
 create or replace function public.key_distance(a text,b text)
-returns integer language plpgsql immutable as $$
+returns integer language plpgsql immutable set search_path=public as $$
 declare i integer; j integer; prev integer[]; curr integer[];
 begin
   if a=b then return 0; end if;
@@ -262,7 +262,7 @@ begin
 end; $$;
 
 create or replace function public.advance_season(p_force boolean default false)
-returns void language plpgsql security definer set search_path=public as $$
+returns void language plpgsql security definer set search_path=public,extensions as $$
 declare s public.seasons%rowtype; chosen record; group_name text;
 begin
   perform pg_advisory_xact_lock(876123);

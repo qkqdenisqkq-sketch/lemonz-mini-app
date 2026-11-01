@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { errorResponse, HttpError, requireConfigured, telegramUser } from "./_shared.js";
+import { errorResponse, HttpError, requireConfigured, supabaseHeaders, telegramUser } from "./_shared.js";
 
 const MIME = { "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp", "image/gif": "gif" };
 
@@ -21,7 +21,7 @@ export default async function handler(request, response) {
         const objectPath = `${user.id}/${Date.now()}-${crypto.randomUUID()}.${MIME[mime]}`;
         const base = process.env.SUPABASE_URL.replace(/\/$/, "");
         const upload = await fetch(`${base}/storage/v1/object/lemonz-media/${objectPath}`, {
-            method: "POST", headers: { apikey: process.env.SUPABASE_SERVICE_ROLE_KEY, Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`, "Content-Type": mime, "x-upsert": "false" }, body: buffer,
+            method: "POST", headers: { ...supabaseHeaders(), "Content-Type": mime, "x-upsert": "false" }, body: buffer,
         });
         if (!upload.ok) throw new HttpError(500, "Не удалось загрузить изображение. Проверь bucket lemonz-media.");
         return response.status(200).json({ ok: true, url: `${base}/storage/v1/object/public/lemonz-media/${objectPath}` });

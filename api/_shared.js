@@ -37,13 +37,21 @@ export function adminOnly(user) {
     if (!ids.includes(user?.id)) throw new HttpError(403, "Только для администратора LEMONZ");
 }
 
+export function supabaseHeaders() {
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+    // Modern secret keys authenticate through apikey; they are not JWTs.
+    return {
+        apikey: key,
+        ...(!key?.startsWith("sb_secret_") ? { Authorization: `Bearer ${key}` } : {}),
+    };
+}
+
 export async function db(path, { method = "GET", body, prefer } = {}) {
     requireConfigured();
     const response = await fetch(`${process.env.SUPABASE_URL.replace(/\/$/, "")}/rest/v1/${path}`, {
         method,
         headers: {
-            apikey: process.env.SUPABASE_SERVICE_ROLE_KEY,
-            Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+            ...supabaseHeaders(),
             "Content-Type": "application/json",
             ...(prefer ? { Prefer: prefer } : {}),
         },

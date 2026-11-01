@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { adminOnly, errorResponse, HttpError, requireConfigured, telegramUser } from "./_shared.js";
+import { adminOnly, errorResponse, HttpError, requireConfigured, supabaseHeaders, telegramUser } from "./_shared.js";
 
 export default async function handler(request,response){
  response.setHeader("Cache-Control","no-store");
@@ -21,7 +21,7 @@ export default async function handler(request,response){
   const root=process.env.SUPABASE_URL.replace(/\/$/,"");
   const uploaded=await fetch(`${root}/storage/v1/object/lemonz-media/${objectPath}`,{
     method:"POST",
-    headers:{apikey:process.env.SUPABASE_SERVICE_ROLE_KEY,Authorization:`Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,"Content-Type":mime,"x-upsert":"false"},
+    headers:{...supabaseHeaders(),"Content-Type":mime,"x-upsert":"false"},
     body:buffer,
   });
   if(!uploaded.ok)throw new HttpError(500,"Не удалось сохранить фото в хранилище lemonz-media");
