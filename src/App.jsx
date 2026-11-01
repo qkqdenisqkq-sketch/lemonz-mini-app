@@ -777,7 +777,7 @@ const checkout = async (comment = "") => {
                     />
                 )}
 
-                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder kits={perfumeConfig.kits} onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} />}
+                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder kits={perfumeConfig.kits} onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} showScrollTop={showScrollTop} onScrollToTop={scrollToTop} />}
 
                 {activePage === "Каталог" && (
                     <Catalog
@@ -901,7 +901,7 @@ const checkout = async (comment = "") => {
 
             <ScrollTop
                 visible={
-                    showScrollTop
+                    showScrollTop && activePage !== "Конструктор парфюма"
                 }
                 onClick={
                     scrollToTop
