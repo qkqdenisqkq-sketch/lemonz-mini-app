@@ -60,8 +60,14 @@ export default function PromoAdmin({ demoPromos, setDemoPromos, onPromosChanged 
 
     useEffect(() => {
         const controller = new AbortController();
-        loadPromos(controller.signal);
-        return () => controller.abort();
+        // Defer initialization: do not synchronously update React state in an effect.
+        const task = window.setTimeout(() => {
+            if (!controller.signal.aborted) void loadPromos(controller.signal);
+        }, 0);
+        return () => {
+            window.clearTimeout(task);
+            controller.abort();
+        };
     }, [loadPromos]);
 
     const items = mode === "demo" ? demoPromos.map((item) => ({ ...item, source: "demo" })) : promos;
