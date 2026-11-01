@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { diagnosePromoAdmin } from "../lib/promoAdminStatus.js";
 
 const CODE_PATTERN = /^[A-Z0-9_-]{4,32}$/;
 
@@ -12,52 +13,56 @@ export default function PromoAdmin({ demoPromos, setDemoPromos, onPromosChanged 
     const [busy, setBusy] = useState(false);
     const [message, setMessage] = useState("");
     const [error, setError] = useState("");
+    const [failure, setFailure] = useState(null);
+
+    const loadPromos = useCallback(async (signal) => {
+        setMode("loading");
+        setFailure(null);
+        setError("");
+        try {
+            // Vite dev mode has no Vercel functions; allow local testing.
+            if (import.meta.env.DEV && !window.Telegram?.WebApp?.initData) {
+                if (!signal?.aborted) setMode("demo");
+                return;
+            }
+            const response = await fetch("/api/admin-promos", {
+                headers: { "x-telegram-init-data": window.Telegram?.WebApp?.initData || "" },
+                cache: "no-store",
+                signal,
+            });
+            const contentType = response.headers.get("content-type") || "";
+            if (import.meta.env.DEV && contentType.includes("text/html")) {
+                if (!signal?.aborted) setMode("demo");
+                return;
+            }
+            const data = contentType.includes("application/json")
+                ? await response.json().catch(() => null)
+                : null;
+            if (!response.ok || !data?.ok) {
+                if (!signal?.aborted) {
+                    setFailure(diagnosePromoAdmin(response.status, data, "Сервер не ответил корректным JSON"));
+                    setMode("error");
+                }
+                return;
+            }
+            if (!signal?.aborted) {
+                setPromos(data.promos || []);
+                setRewards(data.rewards || []);
+                setMode("live");
+            }
+        } catch (caught) {
+            if (!signal?.aborted) {
+                setFailure(diagnosePromoAdmin(0, null, caught?.message || "Нет соединения с сервером"));
+                setMode("error");
+            }
+        }
+    }, []);
 
     useEffect(() => {
-        let mounted = true;
-        const fetchPromos = async () => {
-            try {
-                // `npm run dev` serves Vite pages, not Vercel API functions.
-                // In a browser without signed Telegram data, use local preview
-                // immediately instead of asking an unavailable API for codes.
-                if (import.meta.env.DEV && !window.Telegram?.WebApp?.initData) {
-                    if (mounted) setMode("demo");
-                    return;
-                }
-                const response = await fetch("/api/admin-promos", {
-                    headers: { "x-telegram-init-data": window.Telegram?.WebApp?.initData || "" },
-                });
-                if (import.meta.env.DEV && response.headers.get("content-type")?.includes("text/html")) {
-                    if (mounted) setMode("demo");
-                    return;
-                }
-                const data = await response.json().catch(() => null);
-                if (!response.ok || !data?.ok) {
-                    if (import.meta.env.DEV && data?.configured === false) {
-                        if (mounted) setMode("demo");
-                        return;
-                    }
-                    throw new Error(data?.error || "Не удалось загрузить промокоды");
-                }
-                if (mounted) {
-                    setPromos(data.promos || []);
-                    setRewards(data.rewards || []);
-                    setMode("live");
-                }
-            } catch (caught) {
-                if (mounted) {
-                    if (import.meta.env.DEV && !window.Telegram?.WebApp?.initData) {
-                        setMode("demo");
-                    } else {
-                        setError(caught?.message || "Не удалось загрузить промокоды");
-                        setMode("error");
-                    }
-                }
-            }
-        };
-        fetchPromos();
-        return () => { mounted = false; };
-    }, []);
+        const controller = new AbortController();
+        loadPromos(controller.signal);
+        return () => controller.abort();
+    }, [loadPromos]);
 
     const items = mode === "demo" ? demoPromos.map((item) => ({ ...item, source: "demo" })) : promos;
     const active = items.filter((item) => item.active);
@@ -137,8 +142,23 @@ export default function PromoAdmin({ demoPromos, setDemoPromos, onPromosChanged 
         </div>
     </article>);
 
-    if (mode === "loading") return <p className="promo-admin-loading">Загружаем промокоды...</p>;
-    if (mode === "error") return <div className="promo-admin-warning" role="alert">{error}<p>Проверь Telegram-авторизацию администратора и примени миграцию <code>supabase/migrations/20261024_promo_management.sql</code> в Supabase.</p></div>;
+    if (mode === "loading") return <p className="promo-admin-loading" role="status">Проверяем сервер промокодов...</p>;
+    if (mode === "error") return <section className="promo-admin-setup" role="alert">
+        <span className="promo-admin-setup-icon" aria-hidden="true">✦</span>
+        <h2>{failure?.title || "Не удалось загрузить промокоды"}</h2>
+        <p>{failure?.details}</p>
+        {failure?.kind === "setup" && <div className="promo-admin-setup-steps">
+            <p><strong>1.</strong> На Vercel открой настройки проекта → Environment Variables и добавь серверные переменные <code>SUPABASE_URL</code>, <code>SUPABASE_SERVICE_ROLE_KEY</code> и <code>TELEGRAM_BOT_TOKEN</code>. Не вставляй их в GitHub и сюда в чат.</p>
+            <p><strong>2.</strong> В Supabase выполни основную схему и миграцию промокодов. Пересобери проект в Vercel, чтобы переменные применились.</p>
+        </div>}
+        {failure?.kind === "migration" && <p>Файл миграции: <a href="https://github.com/qkqdenisqkq-sketch/lemonz-mini-app/blob/main/supabase/migrations/20261024_promo_management.sql" target="_blank" rel="noopener noreferrer"><code>20261024_promo_management.sql</code></a></p>}
+        {failure?.technical && <p className="promo-admin-setup-details">Ошибка сервера: {failure.technical}</p>}
+        <div className="promo-admin-setup-actions">
+            <button type="button" onClick={() => loadPromos()}>Повторить проверку</button>
+            <button type="button" className="secondary" onClick={() => { setFailure(null); setMode("demo"); }}>Открыть пробный редактор</button>
+        </div>
+        <p className="promo-admin-setup-note">В пробном режиме коды хранятся только в браузере и не действуют в опубликованном магазине. Для реальных скидок обязательно подключение сервера.</p>
+    </section>;
 
     return <div className="promo-admin-page">
         <div className="promo-admin-intro">
@@ -146,7 +166,11 @@ export default function PromoAdmin({ demoPromos, setDemoPromos, onPromosChanged 
             <h2>Управление промокодами</h2>
             <p>Создавай промокоды, меняй название и размер скидки. Удалённые коды перестают работать, но их можно восстановить.</p>
         </div>
-        {mode === "demo" && <div className="promo-admin-warning">Демо-режим: изменения промокодов работают только на этом устройстве. Для общих промокодов нужна серверная база.</div>}
+        {mode === "demo" && <div className="promo-admin-warning">
+            <strong>Пробный редактор, не реальные промокоды.</strong>
+            <p>Сохранение только в этом браузере. Эти коды не действуют при оформлении заказа в опубликованном Mini App.</p>
+            <button className="promo-admin-reconnect" type="button" onClick={() => loadPromos()}>Проверить сервер и перейти к настоящим промокодам</button>
+        </div>}
         <div className="promo-admin-stats">
             <div><small>Действуют</small><strong>{active.length + rewards.filter((item) => item.active).length}</strong></div>
             <div><small>Отключены</small><strong>{inactive.length + rewards.filter((item) => !item.active).length}</strong></div>

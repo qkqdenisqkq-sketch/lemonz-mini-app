@@ -32,7 +32,7 @@ function validPercent(value) {
 export default async function handler(request, response) {
     response.setHeader("Cache-Control", "no-store");
     try {
-        if (!configured()) return response.status(503).json({ ok: false, configured: false, error: "Сервер не настроен. В локальном режиме изменения только для просмотра." });
+        if (!configured()) return response.status(503).json({ ok: false, code: "SERVER_NOT_CONFIGURED", configured: false, error: "Не заданы серверные переменные для Telegram и Supabase в настройках Vercel. Настрой окружение и запусти новый деплой." });
         const user = telegramUser(request);
         adminOnly(user);
 

@@ -75,3 +75,93 @@
     .promo-admin-fields { grid-template-columns: minmax(0,1fr) 83px; gap: 7px; }
     .promo-admin-form,.promo-admin-list { padding: 13px; }
 }
+
+/* Error-aware setup view for Telegram, not an inaccessible API exception. */
+.promo-admin-setup{
+ display:flex;
+ flex-direction:column;
+ gap:12px;
+ min-width:0;
+ margin:14px 0 25px;
+ padding:18px;
+ border:1px solid #d9c0ec;
+ border-radius:18px;
+ background:#f6edfc;
+ color:#3f2a4d;
+ overflow-wrap:anywhere;
+}
+.promo-admin-setup-icon{
+ display:grid;
+ place-items:center;
+ width:42px;height:42px;
+ border-radius:14px;
+ background:#ead5fa;
+ color:#7f3eb8;
+ font-size:25px;
+}
+.promo-admin-setup h2{font-size:19px;font-weight:850;line-height:1.2;margin:0}
+.promo-admin-setup p{font-size:12px;line-height:1.6;margin:0}
+.promo-admin-setup-steps{display:grid;gap:11px;margin:0;padding:13px;background:#fff;border-radius:12px}
+.promo-admin-setup code{
+ font-size:11px;
+ overflow-wrap:anywhere;
+ white-space:normal;
+ word-break:break-word;
+ color:#6b349b;
+}
+.promo-admin-setup a{color:#6930ad;text-decoration:underline}
+.promo-admin-setup-steps strong{color:#873ecc}
+.promo-admin-setup-details{opacity:.8}
+.promo-admin-setup-actions{display:flex;gap:9px;flex-wrap:wrap}
+.promo-admin-setup-actions button,.promo-admin-reconnect{
+ min-height:42px;
+ border:0;
+ border-radius:11px;
+ padding:9px 13px;
+ background:#6e35a2;
+ color:#fff;
+ font-size:12px;
+ font-weight:850;
+ cursor:pointer;
+}
+.promo-admin-setup-actions .secondary{background:#e9d8f7;color:#583478}
+.promo-admin-setup-note{color:#725e82}
+.promo-admin-warning .promo-admin-reconnect{margin-top:10px}
+.app.theme-dark .promo-admin-setup{background:#382a47;border-color:#705388;color:#f5e9ff}
+.app.theme-dark .promo-admin-setup-icon{background:#533569;color:#ebc8ff}
+.app.theme-dark .promo-admin-setup-steps{background:#291d35}
+.app.theme-dark .promo-admin-setup code,
+.app.theme-dark .promo-admin-setup a{color:#e0b8ff}
+.app.theme-dark .promo-admin-setup-steps strong{color:#deb0fa}
+.app.theme-dark .promo-admin-setup-actions button{background:#c79bea;color:#25122e}
+.app.theme-dark .promo-admin-setup-actions .secondary{background:#503b61;color:#f5eaff}
+.app.theme-dark .promo-admin-setup-note{color:#d5c0e5}
+/* Five admin sections: allow swipe on phones instead of wrapping one orphan tab. */
+.admin-page .admin-workspace-tabs{
+ display:flex;
+ grid-template-columns:none;
+ gap:6px;
+ max-width:100%;
+ overflow-x:auto;
+ overscroll-behavior-x:contain;
+ scrollbar-width:none;
+ -webkit-overflow-scrolling:touch;
+ scroll-snap-type:x proximity;
+}
+.admin-page .admin-workspace-tabs::-webkit-scrollbar{display:none}
+.admin-page .admin-workspace-tabs button{
+ flex:0 0 auto;
+ scroll-snap-align:start;
+ padding:9px 12px;
+ font-size:11px;
+ white-space:nowrap;
+}
+@media(max-width:380px){
+ .admin-page .admin-workspace-tabs button{
+  gap:4px;
+  padding:9px 11px;
+ }
+ .admin-page .admin-workspace-tabs button span{display:inline}
+ .promo-admin-setup{padding:14px}
+ .promo-admin-setup-actions button{width:100%}
+}
