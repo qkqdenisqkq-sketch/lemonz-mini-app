@@ -12,13 +12,14 @@ import { PRODUCT_SUBCATEGORIES, getProductSubcategory } from "../lib/catalog";
 import Voting from "./Voting";
 import Auctions from "./Auctions";
 import PromoAdmin from "./PromoAdmin";
+import PerfumeKitsAdmin from "./PerfumeKitsAdmin";
 
 const ADMIN_SECTIONS = [
     { id: "products", label: "Фигурки", icon: "✦" },
     { id: "voting", label: "Голосование", icon: "◈" },
     { id: "auctions", label: "Аукцион", icon: "◇" },
     { id: "promos", label: "Промокоды", icon: "%" },
-    { id: "perfume", label: "Парфюм", icon: "✿" },
+    { id: "perfume-kits", label: "Наборы парфюма", icon: "✿" },
 ];
 
 function AdminSectionTabs({ active, onChange }) {
@@ -198,8 +199,9 @@ export default function Admin({
     demoPromos,
     setDemoPromos,
     onPromoMutation,
-    perfumeVisible = true,
-    onPerfumeVisibleChange,
+    perfumeConfig,
+    perfumeMode,
+    onPerfumeAction,
 }) {
     const [activeSection, setActiveSection] = useState("products");
     const [
@@ -520,7 +522,7 @@ export default function Admin({
         return <section className="admin-page">
             <div className="page-heading admin-page-heading"><div><p className="section-label">УПРАВЛЕНИЕ</p><h1>Админ-панель</h1></div></div>
             <AdminSectionTabs active={activeSection} onChange={setActiveSection} />
-            {activeSection === "perfume" ? <div className="admin-form"><h2>Конструктор парфюма</h2><p>Показывать баннер и открывать страницу конструктора в Mini App.</p><label className="admin-checkbox"><input type="checkbox" checked={perfumeVisible} onChange={(event) => onPerfumeVisibleChange?.(event.target.checked)} /> {perfumeVisible ? "Раздел включён" : "Раздел скрыт"}</label><p className="admin-product-flags-hint">Настройка пока сохраняется на этом устройстве. Для общего управления всеми посетителями потребуется серверная настройка.</p></div> : activeSection === "voting"
+            {activeSection === "perfume-kits" ? <PerfumeKitsAdmin config={perfumeConfig} mode={perfumeMode} onAction={onPerfumeAction} /> : activeSection === "voting"
                 ? <Voting user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />
                 : activeSection === "auctions"
                     ? <Auctions user={user} isAdmin={isAdmin} adminView showMessage={showMessage} haptic={haptic} />

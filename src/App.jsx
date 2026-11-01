@@ -30,6 +30,7 @@ import {
     useTelegram,
 } from "./hooks/useTelegram";
 import { cartPricing } from "./lib/cartPricing";
+import { DEFAULT_PERFUME_KITS, normalizePerfumeConfig, changePerfumeConfig } from "./lib/perfumeKits";
 
 import "./styles/app.css";
 import "./styles/lemonz-light.css";
@@ -45,6 +46,8 @@ import "./styles/admin-promos.css";
 import "./styles/catalog-reference.css";
 import "./styles/perfume.css";
 import "./styles/perfume-banner.css";
+import "./styles/admin-perfume.css";
+import "./styles/perfume-kit-preview.css";
 
 function App() {
     const [activePage, setActivePage] =
@@ -53,7 +56,31 @@ function App() {
     const [catalogSearchOpen, setCatalogSearchOpen] = useState(false);
 
     const [auctionDetailOpen, setAuctionDetailOpen] = useState(false);
-    const [perfumeVisible, setPerfumeVisible] = useLocalStorage("lemonz-perfume-visible-v1", true);
+    const [perfumeConfig, setPerfumeConfig] = useLocalStorage("lemonz-perfume-config-v1", { visible: (() => { try { return JSON.parse(localStorage.getItem("lemonz-perfume-visible-v1") ?? "true"); } catch { return true; } })(), kits: DEFAULT_PERFUME_KITS, version: 0 });
+    const [perfumeMode, setPerfumeMode] = useState("loading");
+    const perfumeVisible = perfumeConfig.visible;
+    useEffect(() => {
+        let active = true;
+        const load = async () => {
+            if (import.meta.env.DEV && !window.Telegram?.WebApp?.initData) {
+                if (active) setPerfumeMode("demo");
+                return;
+            }
+            try {
+                const response = await fetch("/api/perfume-config", { cache: "no-store" });
+                const result = await response.json().catch(() => ({}));
+                if (!response.ok || !result.ok) throw new Error(result?.error || "API не отвечает");
+                if (active) {
+                    setPerfumeConfig(normalizePerfumeConfig(result));
+                    setPerfumeMode("live");
+                }
+            } catch {
+                if (active) setPerfumeMode("demo");
+            }
+        };
+        load();
+        return () => { active = false; };
+    }, [setPerfumeConfig]);
 
     const [theme, setTheme] = useLocalStorage("lemonz-theme", "light");
     const activeTheme = theme === "dark" ? "dark" : "light";
@@ -371,6 +398,30 @@ function App() {
         setCart((current) => [...current, item]);
         haptic("success");
         showMessage("Набор ароматов добавлен в корзину");
+    };
+
+    const onPerfumeAction = async (action, payload) => {
+        if (!isAdmin) throw new Error("Только для администратора");
+        if (perfumeMode === "demo") {
+            const result = changePerfumeConfig(perfumeConfig, action, payload,
+                () => "kit-" + Date.now() + "-" + Math.random().toString(36).slice(2, 8));
+            setPerfumeConfig(result);
+            return result;
+        }
+        if (perfumeMode !== "live") throw new Error("Сервер не готов. Подключи Supabase и выполни SQL-миграцию.");
+        const response = await fetch("/api/perfume-config", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-telegram-init-data": window.Telegram?.WebApp?.initData || "",
+            },
+            body: JSON.stringify({ action, ...payload }),
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok || !data.ok) throw new Error(data.error || "Не удалось сохранить набор");
+        const next = normalizePerfumeConfig(data);
+        setPerfumeConfig(next);
+        return next;
     };
 
     const increaseQuantity = (
@@ -726,7 +777,7 @@ const checkout = async (comment = "") => {
                     />
                 )}
 
-                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} />}
+                {activePage === "Конструктор парфюма" && perfumeVisible && <PerfumeBuilder kits={perfumeConfig.kits} onBack={() => navigate("Главная")} onAddToCart={addPerfumeSet} />}
 
                 {activePage === "Каталог" && (
                     <Catalog
@@ -826,8 +877,9 @@ const checkout = async (comment = "") => {
                             isAdmin={isAdmin}
                             showMessage={showMessage}
                             haptic={haptic}
-                            perfumeVisible={perfumeVisible}
-                            onPerfumeVisibleChange={setPerfumeVisible}
+                            perfumeConfig={perfumeConfig}
+                            perfumeMode={perfumeMode}
+                            onPerfumeAction={onPerfumeAction}
                             demoPromos={demoPromos}
                             setDemoPromos={setDemoPromos}
                             onPromoMutation={() => setAppliedPromo(null)}

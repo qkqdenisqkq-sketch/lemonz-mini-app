@@ -1,0 +1,15 @@
+.perfume-box-preview .perfume-full-kit-image {
+  display: block;
+  width: 100%;
+  max-height: 320px;
+  min-height: 190px;
+  object-fit: contain;
+  border-radius: 13px;
+}
+.perfume-box-preview:has(.perfume-full-kit-image) {
+  padding: 8px;
+  background: linear-gradient(135deg, #f6edfc, #e8d9f4);
+}
+.app.theme-dark .perfume-box-preview:has(.perfume-full-kit-image) {
+  background: linear-gradient(135deg, #34253f, #271c31);
+}

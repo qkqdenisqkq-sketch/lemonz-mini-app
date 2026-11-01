@@ -22,10 +22,11 @@ export function selectedPerfumes(selections) {
 export function perfumeTotal(selections) {
   return selectedPerfumes(selections).reduce((sum, perfume) => sum + perfume.price * perfume.count, 0);
 }
-export function buildPerfumeCartItem(selections, panelId, timestamp = Date.now()) {
+export function buildPerfumeCartItem(selections, panelId, timestamp = Date.now(), kits = PERFUME_PANELS) {
   const entries = selectedPerfumes(selections);
   if (!entries.length || perfumeCount(selections) > PERFUME_MAX_ITEMS) return null;
-  const panel = PERFUME_PANELS.find((item) => item.id === panelId) || PERFUME_PANELS[0];
+  const panel = kits.find((item) => item.id === panelId) || kits[0];
+  if (!panel) return null;
   const contents = entries.flatMap((item) => Array.from({ length: item.count }, () => item.name));
   return {
     cartId: "perfume-" + timestamp,
@@ -33,7 +34,7 @@ export function buildPerfumeCartItem(selections, panelId, timestamp = Date.now()
     productId: "perfume-set",
     name: "Набор ароматов LEMONZ · " + panel.name,
     category: "Парфюм",
-    image: panel.art,
+    image: panel.previewImage || panel.art,
     unitPrice: perfumeTotal(selections),
     quantity: 1,
     options: [

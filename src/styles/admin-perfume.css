@@ -1,0 +1,41 @@
+.perfume-admin{display:grid;gap:15px;min-width:0;padding-bottom:25px}
+.perfume-admin-settings{border:1px solid #dfd0e9;background:#fff;border-radius:17px;padding:16px;min-width:0;color:#2b1b34}
+.perfume-admin-settings h2{margin:0 0 6px;font-size:19px;font-weight:850}
+.perfume-admin-settings p{font-size:13px;color:#715f7c}
+.perfume-admin-toggle{display:flex;align-items:center;gap:10px;background:#f2e6fa;padding:12px;border-radius:12px;font-weight:750;color:#382246}
+.perfume-admin-toggle input{width:20px;height:20px;accent-color:#8d4bd2}
+.perfume-admin-note{line-height:1.5}
+.perfume-admin-list-head{display:flex;align-items:center;justify-content:space-between;gap:9px;margin:0 0 12px}
+.perfume-admin-list-head strong{color:#7540ba;background:#f0e2fa;padding:4px 10px;border-radius:10px}
+.perfume-admin-kit-list{display:grid;gap:10px}
+.perfume-admin-kit{display:grid;grid-template-columns:86px minmax(0,1fr);gap:9px;padding:10px;border:1px solid #eadff0;border-radius:13px}
+.perfume-admin-kit-images{display:flex;gap:3px;width:86px;height:69px}
+.perfume-admin-kit-images img{width:100%;height:100%;object-fit:cover;border-radius:7px;min-width:0}
+.perfume-admin-kit-meta{display:grid;align-content:center;gap:6px;min-width:0}
+.perfume-admin-kit-meta strong{font-size:14px;overflow-wrap:anywhere}
+.perfume-admin-kit-meta small{color:#766182;font-size:11px}
+.perfume-admin-kit-actions{display:flex;gap:7px;grid-column:1/-1}
+.perfume-admin-kit-actions button,.perfume-admin-form button:not(.perfume-admin-save){padding:8px 10px;border:1px solid #d4b8e8;border-radius:10px;background:#f4ebfa;color:#65398a;font-size:12px;font-weight:700}
+.perfume-admin-kit-actions button.danger{color:#a3344f;background:#ffeff3;border-color:#f0bbca}
+.perfume-admin-form>label,.perfume-admin-image-field{display:grid;gap:6px;font-size:12px;font-weight:700}
+.perfume-admin-form input[type=text],.perfume-admin-form input:not([type]){max-width:100%;min-width:0;width:100%;padding:10px;border:1px solid #dcc9e9;border-radius:10px;background:#fcf8ff;color:#2c1b37}
+.perfume-admin-image-fields{display:grid;gap:13px;margin:14px 0}
+.perfume-admin-image-field{padding:9px;border:1px solid #e5d6ee;border-radius:12px;min-width:0}
+.perfume-admin-image-preview,.perfume-admin-image-empty{width:100%;height:134px;border-radius:8px;object-fit:contain;background:linear-gradient(125deg,#eee3f9,#ead5f8)}
+.perfume-admin-image-empty{display:grid;place-items:center;padding:11px;text-align:center;color:#806a8c;font-size:11px}
+.perfume-admin-colors{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.perfume-admin-colors label{display:flex;align-items:center;justify-content:space-between;gap:7px;font-size:12px}
+.perfume-admin-colors input{width:47px;height:34px;border:0;background:none}
+.perfume-admin-save{display:block;width:100%;border:0;border-radius:13px;background:#17131d;color:#fff;padding:13px;font-weight:800}
+.perfume-admin-error{color:#b82d46!important}.perfume-admin-success{color:#196b42!important}
+.perfume-admin button:disabled{opacity:.5;cursor:not-allowed}
+.app.theme-dark .perfume-admin-settings{background:#2b2036;border-color:#574068;color:#faf0ff}
+.app.theme-dark .perfume-admin-settings p,.app.theme-dark .perfume-admin-kit-meta small{color:#d7c5e4}
+.app.theme-dark .perfume-admin-toggle{background:#493459;color:#f6ecfb}
+.app.theme-dark .perfume-admin-kit{border-color:#604c70}
+.app.theme-dark .perfume-admin-image-field{border-color:#5c456b}
+.app.theme-dark .perfume-admin-form input[type=text],.app.theme-dark .perfume-admin-form input:not([type]){background:#35283f;border-color:#674d7a;color:#fff}
+.app.theme-dark .perfume-admin-kit-actions button,.app.theme-dark .perfume-admin-form button:not(.perfume-admin-save){background:#4b355c;color:#ebd5fa}
+.app.theme-dark .perfume-admin-kit-actions .danger{color:#ffb2c7;background:#582e44}
+.app.theme-dark .perfume-admin-save{background:#d7b1ee;color:#21112b}
+@media(min-width:480px){.perfume-admin-image-fields{grid-template-columns:1fr 1fr}}
