@@ -13,7 +13,7 @@ export default function BottomNav({
         "Профиль",
     ];
 
-    const icons = { "Главная": "home", "Каталог": "grid", "Корзина": "cart", "Профиль": "user", "Админ": "settings" };
+    const icons = { "Главная": "home", "Каталог": "grid", "Корзина": "cart", "Профиль": "profile-doll", "Админ": "settings" };
 
     if (isAdmin) {
         pages.push("Админ");
